@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>终神之战：军团 — 启动器下载</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4 10 14v18c0 12 9 22 22 28 13-6 22-16 22-28V14Z' fill='%2305060b' stroke='%23e8c877' stroke-width='3'/%3E%3Cpath d='M24 34l6 6 11-13' fill='none' stroke='%23e8c877' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+/* ===================== 基础 ===================== */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:#05060b;color:#e7e9f0;overflow-x:hidden;
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+  line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+:root{
+  --gold:#e8c877;--gold-l:#f7e6b0;--gold-d:#a67c2e;--purple:#7c3aed;--cyan:#38bdf8;
+  --line:rgba(255,255,255,.09);--panel:rgba(255,255,255,.035);
+}
+a{color:inherit}
+::selection{background:rgba(232,200,119,.3)}
+[hidden]{display:none!important}
+
+/* ===================== 背景 ===================== */
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.aura{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.aura-1{width:62vw;height:62vw;background:radial-gradient(circle,rgba(124,58,237,.4),transparent 70%);top:-22vw;left:-18vw;animation:drift1 20s ease-in-out infinite}
+.aura-2{width:54vw;height:54vw;background:radial-gradient(circle,rgba(232,200,119,.18),transparent 70%);bottom:-18vw;right:-14vw;animation:drift2 26s ease-in-out infinite}
+.aura-3{width:34vw;height:34vw;background:radial-gradient(circle,rgba(56,189,248,.16),transparent 70%);top:38%;left:52%;animation:drift3 32s ease-in-out infinite}
+@keyframes drift1{50%{transform:translate(6vw,5vh) scale(1.12)}}
+@keyframes drift2{50%{transform:translate(-5vw,-6vh) scale(1.15)}}
+@keyframes drift3{50%{transform:translate(-8vw,4vh) scale(1.2)}}
+.vignette{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 40%,transparent 30%,rgba(5,6,11,.78) 100%)}
+
+.page{position:relative;z-index:2}
+
+/* ===================== 顶栏 ===================== */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(20px,5vw,64px);
+  border-bottom:1px solid transparent;
+}
+header.scrolled{
+  padding:12px clamp(20px,5vw,64px);
+  background:rgba(5,6,11,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom-color:rgba(232,200,119,.14);
+}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.12em;font-size:.95rem;text-decoration:none;padding:6px 2px}
+.logo svg{width:26px;height:26px;flex:none}
+.logo b{background:linear-gradient(120deg,var(--gold-l),var(--gold),var(--gold-d));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+nav{display:flex;gap:28px;font-size:.9rem}
+nav a{text-decoration:none;color:#a9aec0;transition:.25s;position:relative}
+nav a:hover{color:var(--gold)}
+nav a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold);transition:width .3s}
+nav a:hover::after{width:100%}
+
+/* ===================== Hero ===================== */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:110px 24px 60px;position:relative}
+.hero-inner{max-width:1080px;width:100%;text-align:center}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(232,200,119,.35);border-radius:999px;
+  padding:6px 16px;font-size:.8rem;letter-spacing:.14em;color:var(--gold-l);
+  background:rgba(232,200,119,.06);margin-bottom:26px;
+}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.hero h1{
+  font-size:clamp(2.1rem,5.4vw,3.6rem);font-weight:900;letter-spacing:.08em;
+  background:linear-gradient(120deg,#fff 10%,var(--gold-l) 38%,var(--gold) 62%,var(--gold-d) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  line-height:1.25;
+}
+.hero .sub{margin-top:18px;color:#a9aec0;font-size:clamp(.95rem,2vw,1.08rem);max-width:640px;margin-left:auto;margin-right:auto}
+.hero .flow{margin-top:14px;color:#6f768a;font-size:.88rem;letter-spacing:.06em}
+.hero .flow b{color:var(--gold);font-weight:600}
+
+/* ===================== 下载卡片 ===================== */
+.dl-card{
+  margin:44px auto 0;max-width:560px;position:relative;
+  border:1px solid var(--line);border-radius:16px;
+  background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding:34px 30px 30px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.dl-card::before{
+  content:"";position:absolute;inset:0;border-radius:16px;padding:1px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(232,200,119,.5),transparent 30%,transparent 70%,rgba(124,58,237,.4));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+}
+.dl-head{display:flex;align-items:center;gap:14px;text-align:left}
+.dl-icon{
+  width:52px;height:52px;flex:none;border-radius:12px;display:grid;place-items:center;
+  background:linear-gradient(140deg,rgba(232,200,119,.18),rgba(124,58,237,.16));
+  border:1px solid rgba(232,200,119,.3);
+}
+.dl-icon svg{width:26px;height:26px}
+.dl-head .t{font-weight:800;font-size:1.05rem;letter-spacing:.04em}
+.dl-head .m{font-size:.8rem;color:#8b92a6;margin-top:2px}
+.dl-meta{
+  display:flex;justify-content:center;gap:26px;margin:22px 0 4px;
+  font-size:.78rem;color:#8b92a6;
+}
+.dl-meta span b{display:block;color:#d5d9e6;font-weight:600;font-size:.9rem;margin-bottom:1px}
+
+/* 动态玻璃下载按钮 */
+.dl-btn{
+  display:block;width:100%;position:relative;isolation:isolate;overflow:hidden;
+  margin-top:22px;padding:16px 20px;font-size:1.08rem;font-weight:800;letter-spacing:.2em;
+  color:var(--gold-l);text-shadow:0 0 16px rgba(232,200,119,.5);
+  border:none;cursor:pointer;text-decoration:none;
+  clip-path:polygon(4% 0,100% 0,100% 72%,96% 100%,0 100%,0 28%);
+  background:linear-gradient(120deg,rgba(232,200,119,.95),rgba(255,255,255,.65) 22%,rgba(124,58,237,.85) 50%,rgba(255,255,255,.65) 78%,rgba(232,200,119,.95));
+  background-size:240% 240%;animation:rimFlow 6s linear infinite;
+  transition:transform .3s ease,text-shadow .3s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.dl-btn::before{
+  content:"";position:absolute;inset:1.5px;z-index:1;
+  clip-path:polygon(4% 0,100% 0,100% 72%,96% 100%,0 100%,0 28%);
+  background:
+    radial-gradient(120% 90% at 12% 8%,rgba(255,255,255,.2),transparent 45%),
+    radial-gradient(130% 100% at 88% 96%,rgba(124,58,237,.18),transparent 52%),
+    linear-gradient(135deg,rgba(5,6,11,.55),rgba(5,6,11,.25) 55%,rgba(5,6,11,.5));
+  backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+  animation:glowBreath 3.6s ease-in-out infinite;
+}
+.dl-btn::after{
+  content:"";position:absolute;top:0;left:0;width:55%;height:100%;z-index:2;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);
+  transform:translateX(-150%) skewX(-20deg);animation:sheen 4.6s ease-in-out infinite;pointer-events:none;
+}
+.dl-btn span{position:relative;z-index:3}
+.dl-btn:hover{transform:scale(1.03);text-shadow:0 0 24px rgba(232,200,119,.9)}
+.dl-btn:hover::after{animation-duration:1.6s}
+@keyframes rimFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes sheen{0%,52%{transform:translateX(-150%) skewX(-20deg)}88%,100%{transform:translateX(320%) skewX(-20deg)}}
+@keyframes glowBreath{
+  0%,100%{box-shadow:inset 0 0 16px rgba(124,58,237,.1),inset 0 1px 0 rgba(255,255,255,.18)}
+  50%{box-shadow:inset 0 0 30px rgba(232,200,119,.2),inset 0 1px 0 rgba(255,255,255,.26)}
+}
+@media (prefers-reduced-motion:reduce){
+  .dl-btn,.dl-btn::before,.dl-btn::after{animation:none;transition:none}
+  .aura{animation:none}
+}
+.dl-note{margin-top:14px;font-size:.82rem;color:#6f768a}
+.dl-note a{color:var(--cyan)}
+
+/* ===================== 区块通用 ===================== */
+section{max-width:1080px;margin:0 auto;padding:70px 24px}
+.sec-t{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;letter-spacing:.1em;text-align:center}
+.sec-t em{font-style:normal;background:linear-gradient(120deg,var(--gold-l),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-s{text-align:center;color:#8b92a6;font-size:.9rem;margin-top:8px}
+
+/* 使用流程 */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+.step{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:28px 22px;
+  position:relative;overflow:hidden;transition:border-color .3s,transform .3s;
+}
+.step:hover{border-color:rgba(232,200,119,.4);transform:translateY(-4px)}
+.step .n{
+  font-size:.78rem;letter-spacing:.2em;color:var(--gold-d);
+  border:1px solid rgba(232,200,119,.3);border-radius:999px;
+  width:34px;height:34px;display:grid;place-items:center;margin-bottom:16px;
+  background:rgba(232,200,119,.08);font-weight:700;
+}
+.step h3{font-size:1.02rem;letter-spacing:.05em;margin-bottom:8px}
+.step p{font-size:.9rem;color:#9aa0b3}
+.step .ic{position:absolute;right:-8px;bottom:-8px;width:88px;height:88px;opacity:.06;pointer-events:none}
+.step .ic svg{width:100%;height:100%}
+
+/* 信息格 */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px}
+.panel{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:26px 24px}
+.panel h3{font-size:1rem;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel h3 .g{width:10px;height:10px;flex:none;background:linear-gradient(135deg,var(--gold),var(--gold-d));transform:rotate(45deg)}
+.panel ul{list-style:none}
+.panel li{font-size:.85rem;color:#a9aec0;padding:7px 0 7px 20px;position:relative;border-bottom:1px dashed rgba(255,255,255,.06)}
+.panel li:last-child{border-bottom:none}
+.panel li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-left:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold);transform:rotate(-45deg)}
+
+/* FAQ */
+.faq{margin-top:26px;max-width:820px;margin-left:auto;margin-right:auto}
+details{border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-top:12px;overflow:hidden}
+summary{
+  cursor:pointer;padding:16px 20px;font-size:.92rem;font-weight:600;letter-spacing:.04em;
+  display:flex;justify-content:space-between;align-items:center;list-style:none;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.1rem;color:var(--gold);transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 20px 16px;font-size:.85rem;color:#9aa0b3}
+
+/* 安全徽标条 */
+.safe-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 30px;margin-top:34px}
+.safe-strip span{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#9aa0b3}
+.safe-strip svg{width:16px;height:16px;color:var(--gold)}
+
+/* ===================== 页脚 ===================== */
+footer{
+  border-top:1px solid rgba(232,200,119,.12);padding:36px 24px 46px;text-align:center;
+  font-size:.8rem;color:#6f768a;position:relative;z-index:2;
+}
+footer .links{display:flex;justify-content:center;gap:24px;margin-bottom:14px}
+footer .links a{color:#9aa0b3;text-decoration:none;padding:8px 6px;min-height:44px;display:inline-flex;align-items:center}
+footer .links a:hover{color:var(--gold)}
+
+/* 响应式 */
+@media (max-width:820px){
+  .steps{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  nav{display:none}
+  .dl-card{padding:26px 18px 22px}
+}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="aura aura-1"></div><div class="aura aura-2"></div><div class="aura aura-3"></div>
+<div class="vignette"></div>
+
+<div class="page">
+  <header id="hdr">
+    <a class="logo" href="#top" aria-label="终神之战：军团 启动器">
+      <svg viewBox="0 0 64 64" fill="none"><path d="M32 4 10 14v18c0 12 9 22 22 28 13-6 22-16 22-28V14Z" stroke="#e8c877" stroke-width="3"/><path d="M24 34l6 6 11-13" stroke="#e8c877" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <b>终神之战：军团</b>
+    </a>
+    <nav>
+      <a href="https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/">预约页</a>
+      <a href="#download">启动器下载</a>
+      <a href="#steps">使用流程</a>
+      <a href="#faq">常见问题</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <div class="badge"><span class="dot"></span>PC 启动器 v2.0 · 安全检测已启用</div>
+      <h1>下载启动器 · 一键进入战场</h1>
+      <p class="sub">下载完成后运行启动器：自动完成环境安全检测，并从官方服务器下载游戏本体，全程无需手动操作。</p>
+      <p class="flow"><b>下载启动器</b> → <b>安全检测</b> → <b>启动器内下载游戏</b> → <b>独立窗口开始游戏</b></p>
+
+      <div class="dl-card" id="download">
+        <div class="dl-head">
+          <div class="dl-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#e8c877" stroke-width="1.6"/><path d="M8 12l4 4 4-4" stroke="#e8c877" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v8" stroke="#e8c877" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="t">终神之战：军团启动器</div>
+            <div class="m">Windows 独立启动器 · 内嵌安全检查 · 自动下载游戏</div>
+          </div>
+        </div>
+        <div class="dl-meta">
+          <span>大小<b>11.5 KB</b></span>
+          <span>版本<b>v2.0</b></span>
+          <span>校验<b id="shaShort">SHA-256</b></span>
+        </div>
+        <button class="dl-btn" id="dlBtn"><span>立即下载启动器</span></button>
+        <p class="dl-note">下载后请通过启动器内的下载流程获取游戏本体。更新游戏无需重新下载启动器，启动器会自动拉取最新游戏文件。</p>
+      </div>
+
+      <div class="safe-strip">
+        <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>系统 / 硬件 / 磁盘 / 防护 / 下载源 五项检测</span>
+        <span><svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4v6c0 5-4 8-8 10-4-2-8-5-8-10Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>游戏文件 SHA-256 完整性校验</span>
+        <span><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9h17M3.5 15h17M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z" stroke="currentColor" stroke-width="1.6"/></svg>官方源下载 · 独立窗口运行</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="steps">
+    <h2 class="sec-t">三步进入 <em>终神之战</em></h2>
+    <p class="sec-s">从下载启动器到开始游戏，全程约 1 分钟</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <h3>下载启动器</h3>
+        <p>点击上方按钮下载「终神之战：军团启动器」（仅 11.5 KB），下载即完成安装。</p>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M8 12l4 4 4-4" stroke="#e8c877" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 4v12" stroke="#e8c877" stroke-width="1.4" stroke-linecap="round"/><path d="M4 20h16" stroke="#e8c877" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <h3>运行安全检测</h3>
+        <p>双击启动器，自动弹出安全检测窗口，完成系统、硬件、磁盘、防护与下载源五项检测。</p>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6Z" stroke="#e8c877" stroke-width="1.4"/></svg></div>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <h3>下载游戏 · 开始游戏</h3>
+        <p>检测通过后，启动器自动从官方服务器下载游戏本体并校验完整性，随后在独立窗口进入游戏。</p>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4v6c0 5-4 8-8 10-4-2-8-5-8-10Z" stroke="#e8c877" stroke-width="1.4"/></svg></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="info">
+    <h2 class="sec-t">运行要求与 <em>安全机制</em></h2>
+    <div class="grid2">
+      <div class="panel">
+        <h3><span class="g"></span>运行要求</h3>
+        <ul>
+          <li>操作系统：Windows 10 / 11（64 位）</li>
+          <li>浏览器引擎：Microsoft Edge（系统自带）</li>
+          <li>可用磁盘空间：至少 64 MB</li>
+          <li>网络：可访问官方下载源（约 26 KB 游戏包）</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3><span class="g"></span>安全机制</h3>
+        <ul>
+          <li>启动前完成系统环境 / 硬件资源 / 磁盘空间检测</li>
+          <li>安全防护状态检测（Windows Defender 等）</li>
+          <li>下载源可用性检测，失败即终止</li>
+          <li>游戏文件 SHA-256 完整性校验，防篡改防中断</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2 class="sec-t">常见 <em>问题</em></h2>
+    <div class="faq">
+      <details>
+        <summary>下载时浏览器提示「此文件可能有害」？</summary>
+        <p>这是 Windows 对未签名程序的常规提示。本启动器由官方发布，请选择「保留 / 仍要下载」，可放心运行。</p>
+      </details>
+      <details>
+        <summary>运行启动器时弹出安全警告？</summary>
+        <p>首次运行未签名 exe 时，系统可能弹出 SmartScreen 提示，点击「更多信息 → 仍要运行」即可。启动器仅做系统检测并下载官方游戏文件。</p>
+      </details>
+      <details>
+        <summary>检测未通过或下载失败怎么办？</summary>
+        <p>请检查磁盘剩余空间（需 64 MB 以上）、网络连接，并确认杀毒软件未拦截。重启启动器会重新检测与下载。</p>
+      </details>
+      <details>
+        <summary>游戏更新后需要重新下载启动器吗？</summary>
+        <p>不需要。启动器每次运行都会从官方服务器拉取最新游戏文件并校验，游戏本体可独立更新。</p>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <div class="links">
+      <a href="https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/">预约页</a>
+      <a href="#top">返回顶部</a>
+    </div>
+    <div>© 2026 终神之战：军团 项目组 · 健康游戏忠告：抵制不良游戏，拒绝盗版游戏。</div>
+  </footer>
+</div>
+
+<script>
+/* ===== 星空背景 ===== */
+(function () {
+  var c = document.getElementById('stars'), x = c.getContext('2d'), W, H, ps = [], N = 130;
+  function size() { W = c.width = innerWidth; H = c.height = innerHeight; }
+  function mk() { return { x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.4 + .2, a: Math.random() * .7 + .3, s: Math.random() * .3 + .08 }; }
+  function init() { size(); ps = []; for (var i = 0; i < N; i++) ps.push(mk()); }
+  function draw() {
+    x.clearRect(0, 0, W, H);
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i];
+      x.globalAlpha = p.a * (0.6 + 0.4 * Math.sin(Date.now() / 900 + i));
+      x.fillStyle = '#d7dbe8';
+      x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  addEventListener('resize', init);
+  init(); draw();
+})();
+
+/* ===== 顶栏滚动态 ===== */
+(function () {
+  var h = document.getElementById('hdr');
+  function on() { h.classList.toggle('scrolled', scrollY > 30); }
+  addEventListener('scroll', on, { passive: true }); on();
+})();
+
+/* ===== 内嵌启动器下载（base64 → Blob） ===== */
+var GAME_EXE_B64 = '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CQBcBXECOQBCASwCCQF1BYACCQGmBYkCIQFCAVEBKQFCAZACIQHMBZYCIQHVBVEBMQFCAUkCCQHyBZ4CQQEHBlEB8QBCAagCCQEZBrECUQFlBpgBIQBCAVEB0QBqBkkCGQB4Bt4CIQCZBuMCYQFCAeoC0QCxBvIC0QDOBvkCaQHbBv8CyQDlBgUDKQBCAVEBKQDsBm0BKQD4Bm0BKQAEB20BMQBCAVEB0QAOBz4CeQEvBwsDeQFSBxIDiQFlB0kCiQF1B20B0QCEB3EC0QCOBygDkQFCAS4DQQC2BzoDCQHDB0ADGQDRB0oDGQDXB0oDGQDdB0oDGQB3BE4DmQFCAVcDCQHnB14DEQBCAVEBoQFCAWsC0QAwCHUDuQGHCIgDyQDlBo4DDABCAWsCFADVA7oDHADgA4wBwQHwA74BHAAHBNYDJABCAWsCSQD2COEDLADVA7oDNADgA4wBNAAHBNYDwQEbBNABwQEoBFEBwQFfA6EBwQFqBIUEwQFxBBACwQH6CHIBDAAsCdYDPADwA74BPAAbBNABPAAoBMUEPABfA6EBPABqBAcFPABxBBACPAD6CBYFyQCLCSoFyQDlBjAF2QFCAWgByQDlBjYF2QGkCWgB2QGyCT4C4QFxBD0FqQDOCZAB6QFCAWgB6QEgClEF8QE/ClcF+QFiCl0FAQJuCmMFCQJ/CmgF+QFWA4wByQDlBm0FyQCICnMFEQKyCngFGQLACpABCQLSCo8FEQLbCpQFKQIEC5QBKQIQC6cFMQJCAWgBMQImC6wFyQDlBrAF6QFCAbsFCQJDC8EFyQDlBsYFQQJqBOEFQQJwC2gBQQJ7C20BQQKTC+gFWQK+C+4FaQIEDKwFaQIcDKwFKQIuDDAFcQJODA8GgQJCAVEBiQJCAWsCgQKMDBYGgQKoDLsFkQJqBB0GmQLpDCMGqQIHDSoGuQJ/CjIGyQCLCTgGyQAgDZAByQAxDT4GEQJNDVkGKQIuDG0FmQJbDXMFyQJCAVEBUQF1DZgBUQGIDXIGUQH2CHcGDgAEAA0ADgAIAJsADgAMAB0BLgALAH0GLgATAIYGgwAbAJwBowAbAJwBwwAbAJwB4wAbAJwBAAEjAJwBAAF7AGUEAwEbAJwBIAEjAJwBIAF7AOAEIwEbAJwBQwEbAJwBQAIbAJwBQAIjAJwBQAJ7AOcBYAIbAJwBgAIbAJwBgQIbAJwBoAIbAJwBwAL7BJwBAANrAJwBAARrAJwBgARrAJwB1gEdAngCvQIYA2kDfgODA5QDDQSQBJ8EywQfBUYFfgWYBbcFzgX0BQgGRAZgBgQALgALAAQAMAANAAgAPgALAAgAQAANAAoARgALAAoASAANAK4DtAPEA9sD9QP7A7MEBIAAAAAAAAAAAAAAAAAAAAAAsQIAAAQAAAAAAAAAAAAAAAEAQgAAAAAABAAAAAAAAAAAAAAAAQBcAAAAAAAEAAAAAAAAAAAAAAAsAZIAAAAAAAQAAAAAAAAAAAAAAAEAZQAAAAAABAAAAAAAAAAAAAAALAHaCQAAAAAEAAIABQACAAYAAgAHAAIACAACAAkAAgAKAAIAEwDJASMAGAKtAMsDswDxA60AAgTDAIsEswCvBMkAugTTABEFAAAAPE1vZHVsZT4A57uI56We5LmL5oiY77ya5Yab5Zui5ZCv5Yqo5ZmoLmV4ZQBMYXVuY2hlckZvcm0AUHJvZ3JhbQBTeXN0ZW0uV2luZG93cy5Gb3JtcwBGb3JtAG1zY29ybGliAFN5c3RlbQBPYmplY3QAR0FNRV9VUkwAR0FNRV9TSEEyNTYAQVBQX1RJVExFAFN5c3RlbS5EcmF3aW5nAENvbG9yAEJHX1RPUABCR19CT1QAR09MRABURVhUAEdSRUVOAFJFRABMYWJlbABjaGVja1N0YXR1cwBjaGVja05hbWVzAFByb2dyZXNzQmFyAGJhcgBwZXJjZW50TGJsAHN0YXR1c0xibABkb3dubG9hZExibABCdXR0b24Ac3RhcnRCdG4AZXhpdEJ0bgBnYW1lUGF0aABnYW1lUmVhZHkALmN0b3IAQml0bWFwAE1ha2VJY29uAEJ1aWxkVUkAUGFpbnRFdmVudEFyZ3MAT25QYWludEJhY2tncm91bmQAU2V0U3RhdHVzAFNldExpbmUAU2V0UHJvZ3Jlc3MAU3lzdGVtLlRocmVhZGluZy5UYXNrcwBUYXNrAFJ1bkFsbABUYXNrYDEARnVuY2AxAFJ1bkNoZWNrQXN5bmMARXZlbnRBcmdzAFN0YXJ0R2FtZQBDaGVja09TAENoZWNrSFcAQ2hlY2tEaXNrAENoZWNrQVYAQ2hlY2tTb3VyY2UARG93bmxvYWRHYW1lAEZpbmRFZGdlAE1haW4AZQBpAHRleHQAYwBwY3QAaWR4AGZuAHMAU3lzdGVtLlJ1bnRpbWUuQ29tcGlsZXJTZXJ2aWNlcwBDb21waWxhdGlvblJlbGF4YXRpb25zQXR0cmlidXRlAFJ1bnRpbWVDb21wYXRpYmlsaXR5QXR0cmlidXRlAOe7iOelnuS5i+aImO+8muWGm+WbouWQr+WKqOWZqAA8LmN0b3I+Yl9fMABDb21waWxlckdlbmVyYXRlZEF0dHJpYnV0ZQBTeXN0ZW0uRGlhZ25vc3RpY3MARGVidWdnZXJTdGVwVGhyb3VnaEF0dHJpYnV0ZQBjdG9yPmJfXzA+ZF9fMgA8PABWYWx1ZVR5cGUASUFzeW5jU3RhdGVNYWNoaW5lAE1vdmVOZXh0AFNldFN0YXRlTWFjaGluZQA8PjFfX3N0YXRlAEFzeW5jVm9pZE1ldGhvZEJ1aWxkZXIAPD50X19idWlsZGVyADw+NF9fdGhpcwBUYXNrQXdhaXRlcgA8PnVfXyRhd2FpdGVyMwA8PnRfX3N0YWNrAHBhcmFtMABHZXRBd2FpdGVyAGdldF9Jc0NvbXBsZXRlZABBd2FpdFVuc2FmZU9uQ29tcGxldGVkAEdldFJlc3VsdABFeGNlcHRpb24AU2V0RXhjZXB0aW9uAFNldFJlc3VsdABEZWJ1Z2dlckhpZGRlbkF0dHJpYnV0ZQBBc3luY1N0YXRlTWFjaGluZUF0dHJpYnV0ZQBUeXBlAENyZWF0ZQBTdGFydABGcm9tQXJnYgBTdHJpbmcAQ29udHJvbABzZXRfVGV4dABTaXplAHNldF9TaXplAEZvcm1Cb3JkZXJTdHlsZQBzZXRfRm9ybUJvcmRlclN0eWxlAHNldF9NYXhpbWl6ZUJveABGb3JtU3RhcnRQb3NpdGlvbgBzZXRfU3RhcnRQb3NpdGlvbgBzZXRfQmFja0NvbG9yAEZvbnQAc2V0X0ZvbnQAc2V0X0RvdWJsZUJ1ZmZlcmVkAEdldEhpY29uAEljb24ARnJvbUhhbmRsZQBzZXRfSWNvbgBFdmVudEhhbmRsZXIAYWRkX1Nob3duAEdyYXBoaWNzAEltYWdlAEZyb21JbWFnZQBTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQAU21vb3RoaW5nTW9kZQBzZXRfU21vb3RoaW5nTW9kZQBHcmFwaGljc1BhdGgAUG9pbnRGAEFkZExpbmVzAENsb3NlRmlndXJlAFNvbGlkQnJ1c2gAQnJ1c2gARmlsbFBhdGgASURpc3Bvc2FibGUARGlzcG9zZQBGb250U3R5bGUARHJhd1N0cmluZwA8QnVpbGRVST5iX181AENTJDw+OV9fQ2FjaGVkQW5vbnltb3VzTWV0aG9kRGVsZWdhdGU2AEFwcGxpY2F0aW9uAEV4aXQAc2V0X0ZvcmVDb2xvcgBnZXRfVHJhbnNwYXJlbnQAQ29udGVudEFsaWdubWVudABzZXRfVGV4dEFsaWduAFJlY3RhbmdsZQBzZXRfQm91bmRzAENvbnRyb2xDb2xsZWN0aW9uAGdldF9Db250cm9scwBBZGQASW50MzIAQ29uY2F0AHNldF9NaW5pbXVtAHNldF9NYXhpbXVtAHNldF9WYWx1ZQBzZXRfRW5hYmxlZABCdXR0b25CYXNlAEZsYXRTdHlsZQBzZXRfRmxhdFN0eWxlAEZsYXRCdXR0b25BcHBlYXJhbmNlAGdldF9GbGF0QXBwZWFyYW5jZQBzZXRfQm9yZGVyQ29sb3IAc2V0X0JvcmRlclNpemUAYWRkX0NsaWNrAGdldF9DbGllbnRSZWN0YW5nbGUATGluZWFyR3JhZGllbnRCcnVzaABnZXRfR3JhcGhpY3MARmlsbFJlY3RhbmdsZQBnZXRfUgBnZXRfRwBnZXRfQgBQZW4ARHJhd0xpbmUAPD5jX19EaXNwbGF5Q2xhc3M4ADxTZXRTdGF0dXM+Yl9fNwBBY3Rpb24ASUFzeW5jUmVzdWx0AERlbGVnYXRlAEJlZ2luSW52b2tlADw+Y19fRGlzcGxheUNsYXNzYgA8U2V0TGluZT5iX19hADw+Y19fRGlzcGxheUNsYXNzZQA8U2V0UHJvZ3Jlc3M+Yl9fZABNYXRoAE1pbgA8UnVuQWxsPmJfXzEwADxSdW5BbGw+ZF9fMTEAQXN5bmNUYXNrTWV0aG9kQnVpbGRlcgA8b2s+NV9fMTIAVGFza0F3YWl0ZXJgMQA8PnVfXyRhd2FpdGVyMTMAPD51X18kYXdhaXRlcjE0AFJ1bgBnZXRfVGFzawA8PmNfX0Rpc3BsYXlDbGFzczE3ADxSdW5DaGVja0FzeW5jPmJfXzE2AEludm9rZQA8UnVuQ2hlY2tBc3luYz5kX18xOQBBc3luY1Rhc2tNZXRob2RCdWlsZGVyYDEAPHI+NV9fMWEAQ1MkPD44X19sb2NhbHMxOAA8PnVfXyRhd2FpdGVyMWIAUmVwbGFjZQBQcm9jZXNzU3RhcnRJbmZvAHNldF9Bcmd1bWVudHMAc2V0X1VzZVNoZWxsRXhlY3V0ZQBQcm9jZXNzAGdldF9NZXNzYWdlAFN5c3RlbS5NYW5hZ2VtZW50AE1hbmFnZW1lbnRPYmplY3RTZWFyY2hlcgBNYW5hZ2VtZW50T2JqZWN0Q29sbGVjdGlvbgBHZXQATWFuYWdlbWVudE9iamVjdEVudW1lcmF0b3IAR2V0RW51bWVyYXRvcgBNYW5hZ2VtZW50QmFzZU9iamVjdABnZXRfQ3VycmVudABnZXRfSXRlbQBDb252ZXJ0AFRvU3RyaW5nAElzTnVsbE9yRW1wdHkARW52aXJvbm1lbnQAT3BlcmF0aW5nU3lzdGVtAGdldF9PU1ZlcnNpb24AZ2V0X1ZlcnNpb25TdHJpbmcAVG9VSW50NjQAZ2V0X1Byb2Nlc3NvckNvdW50AFVJbnQ2NABTeXN0ZW0uSU8AUGF0aABHZXRUZW1wUGF0aABHZXRQYXRoUm9vdABEcml2ZUluZm8AZ2V0X0F2YWlsYWJsZUZyZWVTcGFjZQBJbnQ2NABUb0ludDMyAFN5c3RlbS5OZXQAV2ViUmVxdWVzdABIdHRwV2ViUmVxdWVzdABzZXRfTWV0aG9kAHNldF9UaW1lb3V0AFdlYlJlc3BvbnNlAEdldFJlc3BvbnNlAEh0dHBXZWJSZXNwb25zZQBIdHRwU3RhdHVzQ29kZQBnZXRfU3RhdHVzQ29kZQBEb3dubG9hZFByb2dyZXNzQ2hhbmdlZEV2ZW50QXJncwA8RG93bmxvYWRHYW1lPmJfXzFlAG8AZ2V0X1RvdGFsQnl0ZXNUb1JlY2VpdmUAZ2V0X0J5dGVzUmVjZWl2ZWQAQ29tYmluZQBEaXJlY3RvcnkARGlyZWN0b3J5SW5mbwBDcmVhdGVEaXJlY3RvcnkAV2ViQ2xpZW50AERvd25sb2FkUHJvZ3Jlc3NDaGFuZ2VkRXZlbnRIYW5kbGVyAGFkZF9Eb3dubG9hZFByb2dyZXNzQ2hhbmdlZABEb3dubG9hZEZpbGUAU3lzdGVtLlNlY3VyaXR5LkNyeXB0b2dyYXBoeQBTSEEyNTYARmlsZQBGaWxlU3RyZWFtAE9wZW5SZWFkAEhhc2hBbGdvcml0aG0AU3RyZWFtAENvbXB1dGVIYXNoAEJpdENvbnZlcnRlcgBUb0xvd2VySW52YXJpYW50AG9wX0luZXF1YWxpdHkAU3BlY2lhbEZvbGRlcgBHZXRGb2xkZXJQYXRoAEV4aXN0cwBTVEFUaHJlYWRBdHRyaWJ1dGUARW5hYmxlVmlzdWFsU3R5bGVzAFNldENvbXBhdGlibGVUZXh0UmVuZGVyaW5nRGVmYXVsdAAAAAAN+3zffq9zg1jAaEttAQ1sePZORI2QbsBoS20BDcF42HZ6evSVwGhLbQENiVtoUTKWpGLAaEttAQ84bg9iC059j5BuwGhLbQEpyH5eeUtOGGIa/5tR4lYgALcAIACJW2hRL1SoUmhWIAB2ADMALgAwAAEfTQBpAGMAcgBvAHMAbwBmAHQAIABZAGEASABlAGkAAAObUQEPyH5eeUtOGGIa/5tR4lYBU0wARQBHAEkATwBOACAATwBGACAAVABIAEUAIABGAEEATABMAEUATgAgAEcATwBEAFMAIAC3ACAAaFFzXvBThJimfiAAtwAgAIlbaFEvVKhSaFYBEaAlIACJW2hRr3ODWMBoS20BByAAIABbAAAJLwA1AF0AIAAACUl7hV/AaEttAR2gJSAAOG4PYgtOfY8I/y9UqFJoVoVRjFsQYgn/AQUwACUAABtjayhXHVLLWRZTiVtoUcBoS20gAC4ALgAuAAEVAF8gACAAy1kgACAAOG4gACAAD2IBCQCQIAAgAPpRAQMlAAAZY2soV8BoS237fN9+r3ODWCAALgAuAC4AARljayhXwGhLbWx49k5EjZBuIAAuAC4ALgABGWNrKFfAaEttwXjYdnp69JUgAC4ALgAuAAEZY2soV8BoS22JW2hRMpakYiAALgAuAC4AARtjayhXwGhLbThuD2ILTn2PkG4gAC4ALgAuAAEp0GM6eRr/6JAGUsBoS20qZxqQx48M/81OBlwdXNWLC059jzhuD2ICMAEfY2soVxqQx48vVKhSaFYLTn2POG4PYiAALgAuAC4AAS0LTn2PMVkljRr/94vAaOVnUX/cfg5UuXD7UQwwAF/LWThuD2INMM2R1YsCMAE3OG4PYgtOfY+MWxBiDP+HZfZOIWiMmhqQx48CMLlw+1EMMABfy1k4bg9iDTDbj2VRGGI6VwH/AQ/AaEttLU4gAC4ALgAuAAEHKmcakMePAQUakMePASNjayhXzZGwZcBoS212XgtOfY8M//eLDXoZUCAALgAuAC4AAScqZ35iMFIgAEUAZABnAGUAIAAVX85kDP/gZdVsL1SoUjhuD2ICMAERZgBpAGwAZQA6AC8ALwAvAAAPLQAtAGEAcABwAD0AIgABMSIAIAAtAC0AdwBpAG4AZABvAHcALQBzAGkAegBlAD0AMQAyADgAMAAsADcAMgAwAAE3OG4PYvJdL1SoUgj/7HLLepd641MJ/wIw71MAkPpRLGcvVKhSaFYM/115qGA4bg9iCWHrXwH/AQ0vVKhSMVkljToAIAABAQBxUwBFAEwARQBDAFQAIABDAGEAcAB0AGkAbwBuACwATwBTAEEAcgBjAGgAaQB0AGUAYwB0AHUAcgBlACAARgBSAE8ATQAgAFcAaQBuADMAMgBfAE8AcABlAHIAYQB0AGkAbgBnAFMAeQBzAHQAZQBtAAAPQwBhAHAAdABpAG8AbgAAHU8AUwBBAHIAYwBoAGkAdABlAGMAdAB1AHIAZQAADc1kXE/7fN9+OgAgAAEFIAAoAAADKQAAaVMARQBMAEUAQwBUACAAVABvAHQAYQBsAFAAaAB5AHMAaQBjAGEAbABNAGUAbQBvAHIAeQAgAEYAUgBPAE0AIABXAGkAbgAzADIAXwBDAG8AbQBwAHUAdABlAHIAUwB5AHMAdABlAG0AACdUAG8AdABhAGwAUABoAHkAcwBpAGMAYQBsAE0AZQBtAG8AcgB5AAARQwBQAFUAIAA4aMNfOgAgAAEPIAB8ACAAhVFYWzoAIAABBSpn5XcBByAATQBCAAARwXjYdu9TKHV6evSVOgAgAAEpcgBvAG8AdABcAFMAZQBjAHUAcgBpAHQAeQBDAGUAbgB0AGUAcgAyAABrUwBFAEwARQBDAFQAIABkAGkAcwBwAGwAYQB5AE4AYQBtAGUALABwAHIAbwBkAHUAYwB0AFMAdABhAHQAZQAgAEYAUgBPAE0AIABBAG4AdABpAFYAaQByAHUAcwBQAHIAbwBkAHUAYwB0AAAXZABpAHMAcABsAGEAeQBOAGEAbQBlAAAZcAByAG8AZAB1AGMAdABTAHQAYQB0AGUAAA0ylqRib4/2TjoAIAABByAA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';
+var GAME_EXE_NAME = '终神之战：军团启动器.exe';
+var GAME_EXE_SHA = '1f5b1edc10fdc3fa9295f720c558953a3aaefb4da7b224ceb4c003928ab90daf';
+document.getElementById('shaShort').textContent = GAME_EXE_SHA.slice(0, 12) + '…';
+
+document.getElementById('dlBtn').addEventListener('click', function () {
+  try {
+    var bin = atob(GAME_EXE_B64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    var blob = new Blob([bytes], { type: 'application/octet-stream' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = GAME_EXE_NAME; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  } catch (e) {
+    alert('下载失败，请刷新页面重试。');
+  }
+});
+</script>
+</body>
+</html>
