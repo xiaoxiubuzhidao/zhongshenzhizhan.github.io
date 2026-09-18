@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="screen-orientation" content="landscape">
+<meta name="x5-orientation" content="landscape">
+<title>终神之战：军团</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    width:100%;height:100%;overflow:hidden;background:#04050a;
+    font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+    color:#fff;user-select:none;-webkit-tap-highlight-color:transparent;
+    overscroll-behavior:none;
+  }
+
+  /* ===== 背景 ===== */
+  #bg{position:fixed;inset:0;display:block;}
+  .vignette{
+    position:fixed;inset:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse at 50% 44%, rgba(150,80,20,.22), transparent 58%),
+      radial-gradient(ellipse at 50% 115%, rgba(140,25,25,.22), transparent 60%),
+      radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,.75) 100%);
+  }
+
+  /* ===== 主舞台 ===== */
+  .stage{
+    position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    transition:opacity .85s ease, transform .85s ease, filter .85s ease;
+  }
+  .stage.out{opacity:0;transform:scale(1.14);filter:blur(12px);}
+
+  .logo-wrap{
+    display:flex;flex-direction:column;align-items:center;
+    transition:transform .5s cubic-bezier(.2,.8,.3,1);
+    will-change:transform;
+  }
+
+  /* 主标题 */
+  .title-main{
+    font-size:clamp(38px, min(10.5vw, 18vh), 120px);
+    font-weight:900;
+    letter-spacing:.08em;
+    line-height:1.1;
+    white-space:nowrap;
+    filter:drop-shadow(0 0 22px rgba(255,180,60,.55)) drop-shadow(0 0 70px rgba(220,110,20,.35));
+  }
+  .char{
+    display:inline-block;
+    background:linear-gradient(180deg,#fff9e6 0%,#ffd98a 38%,#d3a03f 68%,#8f5f14 100%);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    opacity:0;
+    transform:translateY(46px) scale(1.7);
+    filter:blur(14px);
+  }
+  .char.show{animation:charIn .95s cubic-bezier(.16,.9,.24,1) forwards;}
+  @keyframes charIn{
+    from{opacity:0;transform:translateY(46px) scale(1.7);filter:blur(14px);}
+    to{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}
+  }
+
+  /* 分隔线 */
+  .title-line{
+    width:0;height:1px;margin:22px 0 14px;opacity:0;
+    background:linear-gradient(90deg,transparent,#e8c47a 50%,transparent);
+    transition:width 1.1s cubic-bezier(.16,.9,.24,1), opacity .6s ease;
+  }
+  .title-line.show{width:min(380px,52vw);opacity:1;}
+
+  /* 副标题 */
+  .title-sub{
+    font-size:clamp(13px, min(2.4vw, 4.2vh), 27px);
+    font-weight:500;
+    letter-spacing:.7em;text-indent:.7em;
+    color:#f3dcae;opacity:0;transform:translateY(12px);
+    text-shadow:0 0 14px rgba(255,190,80,.75),0 0 46px rgba(255,140,40,.45);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  .title-sub.show{opacity:1;transform:translateY(0);}
+
+  /* ===== 出品署名 ===== */
+  .studio{
+    display:flex;align-items:center;justify-content:center;
+    gap:.78em;
+    margin-top:28px;
+    font-size:clamp(10px, min(1.8vw, 3.2vh), 15px);
+    font-weight:400;
+    color:#a08f6b;
+    white-space:nowrap;
+    pointer-events:none;
+  }
+  .s-text{display:inline-flex;gap:.1em;}
+  .s-line{
+    display:block;
+    width:0;height:1px;opacity:0;
+    background:linear-gradient(90deg,transparent,rgba(232,196,122,.55));
+    transition:width 1.15s cubic-bezier(.16,.9,.24,1), opacity .75s ease;
+  }
+  .s-line:last-child{
+    background:linear-gradient(90deg,rgba(232,196,122,.55),transparent);
+  }
+  .studio.show .s-line{width:min(58px,8vw);opacity:1;}
+
+  .s-char{
+    display:inline-block;
+    opacity:0;
+    background-image:linear-gradient(100deg,
+      #a08f6b 0%, #a08f6b 36%, #ffeec0 50%, #a08f6b 64%, #a08f6b 100%);
+    background-size:300% 100%;
+    background-position:100% 0;
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    will-change:transform, opacity, background-position;
+    animation:
+      sCharIn .95s cubic-bezier(.16,.9,.24,1) var(--d, 2.45s) forwards,
+      sShine 1.4s ease-out calc(var(--d, 2.45s) + .22s) forwards;
+  }
+  @keyframes sCharIn{
+    from{opacity:0;filter:blur(7px);transform:translateY(12px) scale(.9);}
+    to{opacity:1;filter:blur(0);transform:translateY(0) scale(1);}
+  }
+  @keyframes sShine{
+    from{background-position:100% 0;}
+    to{background-position:0% 0;}
+  }
+
+  /* ===== 加载条 ===== */
+  .loading{
+    position:absolute;left:50%;bottom:max(9%, 26px);
+    transform:translateX(-50%);
+    width:min(520px,72vw);
+    opacity:0;transition:opacity .8s ease;
+  }
+  .loading.show{opacity:1;}
+  .bar{
+    position:relative;height:3px;border-radius:3px;overflow:hidden;
+    background:rgba(255,255,255,.07);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+  }
+  .bar-fill{
+    position:relative;height:100%;width:0;overflow:hidden;
+    background:linear-gradient(90deg,#a8721d,#ffd98a,#fff6dc);
+    box-shadow:0 0 14px rgba(255,200,90,.95),0 0 34px rgba(255,150,40,.55);
+    transition:width .2s linear;
+  }
+  .bar-fill::after{
+    content:'';position:absolute;top:0;left:0;width:55%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);
+    animation:shine 1.3s linear infinite;
+  }
+  @keyframes shine{0%{transform:translateX(-130%)}100%{transform:translateX(260%)}}
+  .load-row{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:11px;font-size:12px;letter-spacing:.16em;color:#8d8677;
+  }
+  .load-pct{color:#c9a860;font-variant-numeric:tabular-nums;}
+
+  /* ===== 开始游戏按钮 ===== */
+  .start-wrap{
+    position:absolute;left:50%;bottom:max(13%, 42px);
+    transform:translateX(-50%) translateY(20px);
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .7s ease, transform .7s cubic-bezier(.16,.9,.24,1), visibility .7s ease;
+  }
+  .start-wrap.show{
+    opacity:1;visibility:visible;pointer-events:auto;
+    transform:translateX(-50%) translateY(0);
+  }
+  .btn-start{
+    position:relative;
+    display:inline-block;
+    padding:16px 58px;
+    font-family:inherit;
+    font-size:clamp(14px, min(2.4vw, 3.4vh), 19px);
+    font-weight:700;
+    letter-spacing:.42em;text-indent:.42em;
+    color:#1a1206;
+    cursor:pointer;
+    background:linear-gradient(180deg,#ffe9a8 0%,#ffd166 42%,#c9922f 100%);
+    border:none;
+    clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);
+    box-shadow:0 0 26px rgba(255,190,80,.55),0 0 60px rgba(255,140,40,.32);
+    transition:transform .18s ease, box-shadow .3s ease, filter .3s ease;
+    animation:startBreath 2.6s ease-in-out infinite;
+  }
+  @keyframes startBreath{
+    0%,100%{
+      box-shadow:0 0 26px rgba(255,190,80,.5),0 0 60px rgba(255,140,40,.28);
+      filter:brightness(1);
+    }
+    50%{
+      box-shadow:0 0 40px rgba(255,205,110,.85),0 0 96px rgba(255,150,50,.5);
+      filter:brightness(1.08);
+    }
+  }
+  .btn-start::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(110deg,
+      transparent 0%, transparent 38%, rgba(255,255,255,.85) 50%, transparent 62%, transparent 100%);
+    transform:translateX(-100%);
+    animation:sweep 3.2s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes sweep{
+    0%{transform:translateX(-100%);}
+    55%,100%{transform:translateX(100%);}
+  }
+  .btn-start:hover{
+    filter:brightness(1.12);
+    transform:translateY(-2px) scale(1.02);
+  }
+  .btn-start:active{transform:scale(.96);}
+
+  /* ===== 底部小字 ===== */
+  .footnote{
+    position:absolute;bottom:max(4%, 14px);left:50%;transform:translateX(-50%) translateY(10px);
+    font-size:12px;letter-spacing:.5em;text-indent:.5em;color:#6d6555;
+    opacity:0;transition:opacity 1s ease, transform 1s ease;white-space:nowrap;
+  }
+  .footnote.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ===== 闪光过渡 ===== */
+  .flash{
+    position:fixed;inset:0;pointer-events:none;opacity:0;z-index:15;
+    background:radial-gradient(circle at 50% 50%,
+      #ffffff 0%, rgba(255,231,175,.95) 22%,
+      rgba(255,160,60,.55) 42%, rgba(255,120,30,0) 68%);
+  }
+  .flash.go{animation:flashAnim 1.15s cubic-bezier(.2,.7,.3,1) forwards;}
+  @keyframes flashAnim{
+    0%{opacity:0;transform:scale(.15);}
+    22%{opacity:1;transform:scale(1);}
+    100%{opacity:0;transform:scale(2.4);}
+  }
+
+  /* ===== 弹窗 ===== */
+  .modal-mask{
+    position:fixed;inset:0;z-index:20;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(2,3,7,.68);
+    backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+    opacity:0;visibility:hidden;
+    transition:opacity .55s ease, visibility .55s ease;
+    padding:14px;
+    padding:calc(14px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));
+  }
+  .modal-mask.show{opacity:1;visibility:visible;}
+
+  .modal{
+    position:relative;
+    width:min(500px,90vw);
+    max-height:96vh;
+    overflow:auto;
+    padding:46px 32px 34px;
+    text-align:center;
+    background:linear-gradient(158deg,rgba(30,25,16,.97),rgba(8,8,12,.99));
+    border:1px solid rgba(232,196,122,.32);
+    clip-path:polygon(26px 0,100% 0,100% calc(100% - 26px),calc(100% - 26px) 100%,0 100%,0 26px);
+    filter:drop-shadow(0 0 46px rgba(255,170,60,.28));
+    transform:scale(.9) translateY(26px);
+    opacity:0;
+    transition:transform .7s cubic-bezier(.16,.9,.24,1), opacity .5s ease;
+  }
+  .modal-mask.show .modal{transform:scale(1) translateY(0);opacity:1;}
+
+  /* 内描边 */
+  .modal::before{
+    content:'';position:absolute;inset:6px;pointer-events:none;
+    border:1px solid rgba(232,196,122,.12);
+    clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);
+  }
+
+  .m-icon{
+    width:58px;height:58px;margin:0 auto 20px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid rgba(255,124,84,.85);
+    color:#ff9a6a;font-size:30px;font-weight:700;line-height:1;
+    animation:pulse 2.1s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{box-shadow:0 0 20px rgba(255,100,60,.35),inset 0 0 16px rgba(255,100,60,.18);}
+    50%{box-shadow:0 0 44px rgba(255,100,60,.75),inset 0 0 26px rgba(255,100,60,.38);}
+  }
+
+  .m-title{
+    font-size:clamp(18px, min(4.4vw, 6vh), 25px);
+    font-weight:700;letter-spacing:.32em;text-indent:.32em;
+    color:#ffd98a;
+    text-shadow:0 0 18px rgba(255,180,70,.65),0 0 50px rgba(255,120,30,.35);
+  }
+  .m-divider{
+    height:1px;margin:20px 0 18px;
+    background:linear-gradient(90deg,transparent,rgba(232,196,122,.75),transparent);
+  }
+  .m-label{font-size:11px;letter-spacing:.42em;text-indent:.42em;color:#8d8677;}
+  .m-date{
+    margin:12px 0 26px;
+    font-size:clamp(22px, min(6vw, 7.5vh), 34px);font-weight:800;letter-spacing:.06em;
+    background:linear-gradient(180deg,#fff8e2,#ffd98a 45%,#c9922f);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 16px rgba(255,180,60,.5));
+  }
+
+  /* 排队人数数字 */
+  .queue-num{
+    font-variant-numeric:tabular-nums;
+    display:inline-block;
+    min-width:2.2em;
+    text-align:right;
+  }
+  .m-date small{
+    font-size:.42em;
+    font-weight:600;
+    letter-spacing:.22em;
+    margin-left:.35em;
+    color:#c9922f;
+    -webkit-text-fill-color:#c9922f;
+  }
+
+  .m-btns{
+    display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+    margin-top:4px;
+  }
+  .btn{
+    padding:12px 30px;font-family:inherit;font-size:13px;letter-spacing:.22em;
+    text-indent:.22em;cursor:pointer;color:#e8c47a;
+    background:transparent;border:1px solid rgba(232,196,122,.45);
+    clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+    transition:background .3s ease, box-shadow .3s ease, color .3s ease, transform .15s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:rgba(232,196,122,.13);box-shadow:0 0 26px rgba(232,196,122,.4);color:#fff3d4;}
+  .btn:active{transform:scale(.96);}
+  .btn.primary{
+    background:linear-gradient(180deg,rgba(255,222,140,.95),rgba(186,126,32,.95));
+    color:#1a1206;font-weight:700;border-color:transparent;
+  }
+  .btn.primary:hover{box-shadow:0 0 34px rgba(255,190,80,.7);color:#1a1206;}
+
+  /* ===== 竖屏提示（仅触屏设备） ===== */
+  .rotate-hint{
+    position:fixed;inset:0;z-index:60;
+    display:none;flex-direction:column;align-items:center;justify-content:center;
+    gap:26px;text-align:center;padding:30px;
+    background:radial-gradient(ellipse at 50% 40%, #14100a, #04050a 72%);
+  }
+  .rh-device{
+    width:66px;height:110px;border:3px solid rgba(232,196,122,.7);border-radius:12px;
+    position:relative;
+    box-shadow:0 0 26px rgba(255,180,70,.35);
+    animation:rotateDevice 2.4s cubic-bezier(.6,0,.3,1) infinite;
+  }
+  .rh-device::after{
+    content:'';position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+    width:22px;height:3px;border-radius:2px;background:rgba(232,196,122,.7);
+  }
+  @keyframes rotateDevice{
+    0%,20%{transform:rotate(0deg);}
+    55%,100%{transform:rotate(-90deg);}
+  }
+  .rh-title{
+    font-size:clamp(16px,4.6vw,22px);font-weight:700;
+    letter-spacing:.3em;text-indent:.3em;color:#ffd98a;
+    text-shadow:0 0 18px rgba(255,180,70,.6);
+  }
+  .rh-sub{font-size:13px;letter-spacing:.22em;color:#8d8677;}
+
+  /* 竖屏 + 触屏设备 → 显示旋转提示 */
+  @media (orientation: portrait) and (pointer: coarse){
+    .rotate-hint{display:flex;}
+  }
+
+  /* ===== 横屏精简布局（矮屏手机） ===== */
+  @media (orientation: landscape) and (max-height: 560px){
+    .title-line{margin:14px 0 10px;}
+    .studio{margin-top:12px;}
+    .studio.show .s-line{width:min(42px,7vw);}
+    .loading{bottom:max(11%, 20px);}
+    .load-row{font-size:11px;margin-top:9px;}
+    .footnote{bottom:max(3%, 8px);font-size:11px;}
+
+    .start-wrap{bottom:max(15%, 34px);}
+    .btn-start{padding:11px 40px;font-size:14px;letter-spacing:.34em;text-indent:.34em;
+      clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);}
+
+    .modal{
+      width:min(620px,88vw);
+      padding:24px 28px 20px;
+      clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);
+    }
+    .modal::before{
+      inset:5px;
+      clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);
+    }
+    .m-icon{width:40px;height:40px;font-size:22px;margin-bottom:10px;border-width:2px;}
+    .m-divider{margin:12px 0 10px;}
+    .m-date{margin:8px 0 16px;}
+    .m-label{font-size:10px;}
+    .m-btns{margin-top:4px;gap:10px;}
+    .btn{padding:9px 22px;font-size:12px;letter-spacing:.18em;}
+  }
+
+  @media (max-width:420px){
+    .m-btns{gap:10px;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<div class="vignette"></div>
+
+<div class="stage" id="stage">
+  <div class="logo-wrap" id="logoWrap">
+    <div class="title-main" id="titleMain"></div>
+    <div class="title-line" id="titleLine"></div>
+    <div class="title-sub" id="titleSub">军 团</div>
+
+    <!-- 出品署名 -->
+    <div class="studio" id="studio">
+      <span class="s-line"></span>
+      <span class="s-text" id="studioText"></span>
+      <span class="s-line"></span>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    <div class="load-row">
+      <span id="loadText">正在初始化引擎...</span>
+      <span class="load-pct" id="loadPct">0%</span>
+    </div>
+  </div>
+
+  <!-- 开始游戏按钮 -->
+  <div class="start-wrap" id="startWrap">
+    <button class="btn-start" id="btnStart">开始游戏</button>
+  </div>
+
+  <div class="footnote" id="footnote">敬 请 期 待</div>
+</div>
+
+<div class="flash" id="flash"></div>
+
+<!-- 服务器爆满排队弹窗 -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal">
+    <div class="m-icon"><span>!</span></div>
+    <h2 class="m-title">服务器爆满</h2>
+    <div class="m-divider"></div>
+    <div class="m-label">当前正在排队</div>
+    <div class="m-date">
+      <span class="queue-num" id="queueNum">12998</span><small>名</small>
+    </div>
+    <div class="m-btns">
+      <button class="btn primary" id="btnRetry">重新连接</button>
+      <button class="btn" id="btnOk">确 定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 竖屏提示 -->
+<div class="rotate-hint">
+  <div class="rh-device"></div>
+  <div class="rh-title">请 横 屏 使 用</div>
+  <div class="rh-sub">旋转设备以获得最佳体验</div>
+</div>
+
+<script>
+/* ====================================================
+   一、背景粒子 / 星尘
+==================================================== */
+(function () {
+  const cvs = document.getElementById('bg');
+  const ctx = cvs.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0, stars = [], shoots = [];
+
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cvs.width = W * dpr;
+    cvs.height = H * dpr;
+    cvs.style.width = W + 'px';
+    cvs.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    build();
+  }
+
+  function build() {
+    stars = [];
+    const n = Math.max(60, Math.round(W * H / 10000));
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.5 + 0.3,
+        vy: -(Math.random() * 0.28 + 0.04),
+        a: Math.random() * 0.6 + 0.15,
+        ph: Math.random() * Math.PI * 2,
+        sp: Math.random() * 0.025 + 0.005
+      });
+    }
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (let i = 0; i < stars.length; i++) {
+      const s = stars[i];
+      s.y += s.vy;
+      s.ph += s.sp;
+      if (s.y < -6) { s.y = H + 6; s.x = Math.random() * W; }
+      const a = s.a * (0.55 + 0.45 * Math.sin(s.ph));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, 6.2832);
+      ctx.fillStyle = 'rgba(255,226,175,' + a.toFixed(3) + ')';
+      ctx.fill();
+    }
+
+    if (Math.random() < 0.006 && shoots.length < 3) {
+      shoots.push({
+        x: Math.random() * W * 0.8,
+        y: Math.random() * H * 0.5,
+        vx: 3 + Math.random() * 3.4,
+        vy: 1.4 + Math.random() * 2.2,
+        life: 1,
+        len: 80 + Math.random() * 130
+      });
+    }
+    for (let i = shoots.length - 1; i >= 0; i--) {
+      const sh = shoots[i];
+      sh.x += sh.vx; sh.y += sh.vy; sh.life -= 0.012;
+      if (sh.life <= 0 || sh.x > W + 120 || sh.y > H + 120) { shoots.splice(i, 1); continue; }
+      const tx = sh.x - sh.vx * sh.len / 6;
+      const ty = sh.y - sh.vy * sh.len / 6;
+      const g = ctx.createLinearGradient(sh.x, sh.y, tx, ty);
+      g.addColorStop(0, 'rgba(255,238,196,' + sh.life.toFixed(2) + ')');
+      g.addColorStop(1, 'rgba(255,170,70,0)');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(sh.x, sh.y);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', function () {
+    setTimeout(resize, 260);
+  });
+  resize();
+  loop();
+})();
+
+/* ====================================================
+   二、启动流程控制
+==================================================== */
+(function () {
+  const $ = id => document.getElementById(id);
+  const stage     = $('stage');
+  const titleMain = $('titleMain');
+  const titleLine = $('titleLine');
+  const titleSub  = $('titleSub');
+  const studio    = $('studio');
+  const studioText= $('studioText');
+  const loading   = $('loading');
+  const barFill   = $('barFill');
+  const loadText  = $('loadText');
+  const loadPct   = $('loadPct');
+  const startWrap = $('startWrap');
+  const btnStart  = $('btnStart');
+  const flash     = $('flash');
+  const modalMask = $('modalMask');
+  const btnRetry  = $('btnRetry');
+  const btnOk     = $('btnOk');
+  const footnote  = $('footnote');
+  const logoWrap  = $('logoWrap');
+  const queueNum  = $('queueNum');
+
+  const NAME = '终神之战';
+  const STUDIO_NAME = '墨隐工作室出品';
+
+  /* 出品署名起始时间 & 逐字间隔（秒） */
+  const STUDIO_START = 2.45;
+  const STUDIO_STEP  = 0.085;
+
+  /* ---------- 排队人数配置 ---------- */
+  /* 基准时刻：以此为起点，之后每 2 小时减少 1 名 */
+  const QUEUE_BASE_TIME = new Date(2026, 8, 14, 22, 0, 0).getTime(); // 2026-09-14 22:00
+  const QUEUE_BASE_NUM  = 12998;                 // 基准排队人数
+  const QUEUE_INTERVAL  = 2 * 60 * 60 * 1000;    // 2 小时（毫秒）
+  let queueTimer = null;
+
+  /* 计算当前排队人数 */
+  function calcQueueNum() {
+    const elapsed = Date.now() - QUEUE_BASE_TIME;
+    const decrease = elapsed > 0 ? Math.floor(elapsed / QUEUE_INTERVAL) : 0;
+    return Math.max(1, QUEUE_BASE_NUM - decrease);
+  }
+
+  /* 更新显示 */
+  function updateQueueNum() {
+    queueNum.textContent = calcQueueNum();
+  }
+
+  /* 启动排队人数定时刷新（每分钟检查一次，跨过整点即变） */
+  function startQueueTimer() {
+    updateQueueNum();
+    if (queueTimer) clearInterval(queueTimer);
+    queueTimer = setInterval(updateQueueNum, 60 * 1000);
+  }
+
+  function stopQueueTimer() {
+    if (queueTimer) { clearInterval(queueTimer); queueTimer = null; }
+  }
+
+  const STEPS = [
+    { p: 0,   t: '正在初始化引擎...' },
+    { p: 20,  t: '正在校验游戏资源...' },
+    { p: 42,  t: '正在加载军团数据...' },
+    { p: 64,  t: '正在同步战场信息...' },
+    { p: 84,  t: '正在建立服务器连接...' },
+    { p: 100, t: '数据加载完成' }
+  ];
+
+  let timers = [];
+  let ticker = null;
+  let gameStarted = false;
+
+  function later(fn, ms) {
+    const id = setTimeout(function () {
+      timers = timers.filter(t => t !== id);
+      fn();
+    }, ms);
+    timers.push(id);
+    return id;
+  }
+
+  function clearAll() {
+    timers.forEach(clearTimeout);
+    timers = [];
+    if (ticker) { clearInterval(ticker); ticker = null; }
+  }
+
+  /* ---------- 尝试锁定横屏（需用户手势，失败静默） ---------- */
+  function tryLockLandscape() {
+    try {
+      if (screen.orientation && typeof screen.orientation.lock === 'function') {
+        const p = screen.orientation.lock('landscape');
+        if (p && p.catch) p.catch(function () {});
+      }
+    } catch (e) { /* 忽略 */ }
+  }
+
+  /* ---------- 构建「墨隐工作室出品」 ---------- */
+  function buildStudio() {
+    studio.classList.remove('show');
+    studioText.innerHTML = '';
+
+    [...STUDIO_NAME].forEach(function (ch, i) {
+      const sp = document.createElement('span');
+      sp.className = 's-char';
+      sp.textContent = ch;
+      sp.style.setProperty('--d', (STUDIO_START + i * STUDIO_STEP).toFixed(3) + 's');
+      studioText.appendChild(sp);
+    });
+
+    // 强制重排，确保线条生长过渡能被重新触发
+    void studio.offsetWidth;
+    studio.classList.add('show');
+  }
+
+  /* ---------- 播放开场 ---------- */
+  function playIntro() {
+    clearAll();
+    stopQueueTimer();
+    gameStarted = false;
+
+    barFill.style.width = '0%';
+    loadPct.textContent = '0%';
+    loadText.textContent = STEPS[0].t;
+    loading.classList.remove('show');
+    titleLine.classList.remove('show');
+    titleSub.classList.remove('show');
+    footnote.classList.remove('show');
+    startWrap.classList.remove('show');
+    stage.classList.remove('out');
+    modalMask.classList.remove('show');
+
+    // 重建标题逐字（char + show 同时挂上，动画才会启动）
+    titleMain.innerHTML = '';
+    const chars = [...NAME];
+    chars.forEach(function (ch, i) {
+      const sp = document.createElement('span');
+      sp.className = 'char show';
+      sp.textContent = ch;
+      sp.style.animationDelay = (0.45 + i * 0.17).toFixed(2) + 's';
+      titleMain.appendChild(sp);
+    });
+
+    // 重建出品署名（自动按 --d 依次浮现）
+    buildStudio();
+
+    later(() => titleLine.classList.add('show'), 1350);
+    later(() => titleSub.classList.add('show'), 1650);
+    later(() => loading.classList.add('show'), 1950);
+    later(runLoading, 2150);
+  }
+
+  /* ---------- 加载进度 ---------- */
+  function runLoading() {
+    if (ticker) clearInterval(ticker);
+    let prog = 0;
+    let stepIdx = 0;
+
+    ticker = setInterval(function () {
+      prog = Math.min(prog + Math.random() * 3.2 + 1.1, 100);
+      barFill.style.width = prog.toFixed(1) + '%';
+      loadPct.textContent = Math.floor(prog) + '%';
+
+      for (let i = STEPS.length - 1; i >= 0; i--) {
+        if (prog >= STEPS[i].p) {
+          if (stepIdx !== i) {
+            stepIdx = i;
+            loadText.textContent = STEPS[i].t;
+          }
+          break;
+        }
+      }
+
+      if (prog >= 100) {
+        clearInterval(ticker);
+        ticker = null;
+        later(finish, 700);
+      }
+    }, 80);
+  }
+
+  /* ---------- 加载完成 → 显示开始游戏按钮 ---------- */
+  function finish() {
+    loadText.textContent = '数据加载完成';
+    loadPct.textContent = '100%';
+
+    // 淡出加载条，同时升起开始游戏按钮
+    later(function () {
+      loading.classList.remove('show');
+      startWrap.classList.add('show');
+    }, 520);
+  }
+
+  /* ---------- 点击「开始游戏」 → 闪光 → 排队弹窗 ---------- */
+  function onStartGame() {
+    if (gameStarted) return;
+    gameStarted = true;
+
+    tryLockLandscape();
+
+    // 按钮收起
+    startWrap.classList.remove('show');
+
+    // 闪光过渡
+    flash.classList.remove('go');
+    void flash.offsetWidth;
+    flash.classList.add('go');
+
+    later(() => stage.classList.add('out'), 430);
+    later(function () {
+      modalMask.classList.add('show');
+      startQueueTimer();   // 弹窗出现时开始计时刷新排队人数
+    }, 1000);
+    later(() => flash.classList.remove('go'), 1600);
+  }
+
+  btnStart.addEventListener('click', onStartGame);
+
+  /* ---------- 重新连接 ---------- */
+  btnRetry.addEventListener('click', function () {
+    tryLockLandscape();
+    stopQueueTimer();
+    modalMask.classList.remove('show');
+    later(playIntro, 450);
+  });
+
+  /* ---------- 确定 ---------- */
+  btnOk.addEventListener('click', function () {
+    tryLockLandscape();
+    stopQueueTimer();
+    modalMask.classList.remove('show');
+    later(function () {
+      stage.classList.remove('out');
+      loading.classList.remove('show');
+      // 回到标题界面，重新显示开始游戏按钮
+      gameStarted = false;
+      startWrap.classList.add('show');
+    }, 450);
+  });
+
+  /* ---------- 鼠标视差（桌面端） ---------- */
+  document.addEventListener('mousemove', function (e) {
+    const x = (e.clientX / window.innerWidth - 0.5);
+    const y = (e.clientY / window.innerHeight - 0.5);
+    logoWrap.style.transform =
+      'translate(' + (x * 18).toFixed(2) + 'px,' + (y * 12).toFixed(2) + 'px)';
+  });
+
+  /* ---------- 启动 ---------- */
+  window.addEventListener('load', playIntro);
+  if (document.readyState === 'complete') playIntro();
+})();
+</script>
+</body>
+</html>
