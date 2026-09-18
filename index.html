@@ -447,6 +447,43 @@ input[type=tel]:focus{
   margin-top:20px;font-size:.72rem;color:#5f6579;letter-spacing:.05em;line-height:1.8;
 }
 
+/* ===================== 启动器下载弹窗（融合独立启动器页） ===================== */
+.launcher-modal .modal-card{width:min(460px,100%)}
+.launcher-body{padding:30px clamp(24px,5vw,38px) 32px;text-align:center}
+.launcher-icon{
+  width:76px;height:76px;border-radius:22px;margin:0 auto 20px;
+  display:grid;place-items:center;
+  background:linear-gradient(140deg,rgba(232,200,119,.24),rgba(56,189,248,.16));
+  border:1px solid rgba(232,200,119,.42);
+  box-shadow:0 0 36px -8px rgba(232,200,119,.55);
+  animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;
+}
+.launcher-body h3{font-size:1.2rem;font-weight:800;letter-spacing:.1em;color:var(--gold-l);margin-bottom:12px;line-height:1.5}
+.launcher-flow{
+  display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;
+  font-size:.78rem;color:#8b91a7;letter-spacing:.04em;margin-bottom:22px;line-height:2;
+}
+.launcher-flow b{color:var(--gold);font-weight:700;white-space:nowrap}
+.launcher-flow .sep{color:rgba(255,255,255,.25)}
+.launcher-meta{
+  border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);
+  padding:14px 18px;margin-bottom:24px;text-align:left;
+}
+.launcher-meta .row{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  font-size:.8rem;color:#9aa0b3;padding:7px 0;
+}
+.launcher-meta .row+.row{border-top:1px dashed rgba(255,255,255,.07)}
+.launcher-meta .row b{color:#e2e5ef;font-weight:600}
+.launcher-meta code{
+  font-size:.72rem;color:var(--cyan);background:rgba(56,189,248,.08);
+  border:1px solid rgba(56,189,248,.25);border-radius:6px;padding:3px 8px;
+  letter-spacing:.04em;
+}
+.launcher-actions{display:flex;flex-direction:column;gap:12px}
+.launcher-note{margin-top:20px;font-size:.72rem;color:#5f6579;letter-spacing:.05em;line-height:1.8}
+.launcher-note b{color:#8b91a7;font-weight:600}
+
 /* ===================== 页脚 ===================== */
 footer{
   padding:60px clamp(20px,6vw,64px) 46px;text-align:center;
@@ -730,6 +767,7 @@ body.modal-open{overflow:hidden}
 
     <div class="hero-actions">
       <a href="#reserve" class="btn btn-primary">立即预约</a>
+      <button type="button" class="btn btn-ghost" id="launcherOpenBtn">下载启动器</button>
       <a href="#features" class="btn btn-ghost">游戏特色</a>
     </div>
 
@@ -915,6 +953,43 @@ body.modal-open{overflow:hidden}
         <button type="button" class="btn-skip" id="downloadNo">暂不下载</button>
       </div>
       <p class="download-note" id="apkSizeNote">选择暂不下载，不影响你的预约与内测资格</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 弹窗：启动器下载（融合独立启动器页） ==================== -->
+<div class="modal launcher-modal" id="launcherModal" role="dialog" aria-modal="true" aria-labelledby="launcher-title">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="launcher-title">启动器下载</h3>
+      <button type="button" class="modal-close" id="launcherClose" aria-label="关闭">✕</button>
+    </div>
+    <div class="launcher-body">
+      <div class="launcher-icon">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#e8c877" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2 4 5.2v5.6c0 4.6 3.3 8.4 8 9.7 4.7-1.3 8-5.1 8-9.7V5.2Z"/>
+          <path d="M12 8v6M9.3 11.3 12 14l2.7-2.7"/>
+        </svg>
+      </div>
+      <h3>下载启动器 · 一键进入战场</h3>
+      <div class="launcher-flow">
+        <b>下载启动器</b><span class="sep">→</span>
+        <b>安全检测</b><span class="sep">→</span>
+        <b>启动器内下载游戏</b><span class="sep">→</span>
+        <b>独立窗口开始游戏</b>
+      </div>
+      <div class="launcher-meta">
+        <div class="row"><span>文件</span><b id="launcherName">终神之战：军团启动器.exe</b></div>
+        <div class="row"><span>大小</span><b id="launcherSize">—</b></div>
+        <div class="row"><span>版本</span><b>v2.0</b></div>
+        <div class="row"><span>SHA-256</span><code id="launcherSha">…</code></div>
+      </div>
+      <div class="launcher-actions">
+        <button type="button" class="btn-download" id="launcherDlYes">
+          <span>立即下载启动器</span><span class="arr">⬇</span>
+        </button>
+      </div>
+      <p class="launcher-note">浏览器可能提示"该文件可能有害"，请选择<b>「保留」</b>后运行；启动器会自动完成环境安全检测并下载游戏本体。</p>
     </div>
   </div>
 </div>
@@ -1653,6 +1728,49 @@ downloadModal.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && downloadModal.classList.contains('open')) {
     closeDownloadModal(afterDownloadChoice);
+  }
+});
+
+/* ============== 启动器下载弹窗（融合独立启动器页） ============== */
+const GAME_EXE_SHA = '1f5b1edc10fdc3fa9295f720c558953a3aaefb4da7b224ceb4c003928ab90daf';
+const launcherModal   = document.getElementById('launcherModal');
+const launcherOpenBtn = document.getElementById('launcherOpenBtn');
+const launcherClose   = document.getElementById('launcherClose');
+const launcherSizeEl  = document.getElementById('launcherSize');
+const launcherShaEl   = document.getElementById('launcherSha');
+const launcherDlYes   = document.getElementById('launcherDlYes');
+
+(function () {
+  launcherSizeEl.textContent = fmtSize(GAME_EXE_SIZE);
+  launcherShaEl.textContent = GAME_EXE_SHA.slice(0, 16) + '…';
+})();
+
+function openLauncherModal() {
+  launcherModal.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeLauncherModal() {
+  launcherModal.classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+
+launcherOpenBtn.addEventListener('click', openLauncherModal);
+
+launcherClose.addEventListener('click', closeLauncherModal);
+
+launcherDlYes.addEventListener('click', () => {
+  startDownload();
+  toast('已开始下载启动器');
+});
+
+launcherModal.addEventListener('click', (e) => {
+  if (e.target === launcherModal) closeLauncherModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && launcherModal.classList.contains('open')) {
+    closeLauncherModal();
   }
 });
 
