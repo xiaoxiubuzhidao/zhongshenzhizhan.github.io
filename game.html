@@ -297,29 +297,15 @@
     height:1px;margin:20px 0 18px;
     background:linear-gradient(90deg,transparent,rgba(232,196,122,.75),transparent);
   }
-  .m-label{font-size:11px;letter-spacing:.42em;text-indent:.42em;color:#8d8677;}
-  .m-date{
-    margin:12px 0 26px;
-    font-size:clamp(22px, min(6vw, 7.5vh), 34px);font-weight:800;letter-spacing:.06em;
-    background:linear-gradient(180deg,#fff8e2,#ffd98a 45%,#c9922f);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    filter:drop-shadow(0 0 16px rgba(255,180,60,.5));
-  }
-
-  /* 排队人数数字 */
-  .queue-num{
-    font-variant-numeric:tabular-nums;
-    display:inline-block;
-    min-width:2.2em;
-    text-align:right;
-  }
-  .m-date small{
-    font-size:.42em;
-    font-weight:600;
-    letter-spacing:.22em;
-    margin-left:.35em;
-    color:#c9922f;
-    -webkit-text-fill-color:#c9922f;
+  
+  /* 修改：将原排队人数的样式改为普通文本样式，用于显示时间 */
+  .m-date-text {
+    margin: 12px 0 26px;
+    font-size: clamp(16px, min(4vw, 5vh), 24px);
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: #e8c47a;
+    line-height: 1.5;
   }
 
   .m-btns{
@@ -399,8 +385,7 @@
     }
     .m-icon{width:40px;height:40px;font-size:22px;margin-bottom:10px;border-width:2px;}
     .m-divider{margin:12px 0 10px;}
-    .m-date{margin:8px 0 16px;}
-    .m-label{font-size:10px;}
+    .m-date-text{margin:8px 0 16px;}
     .m-btns{margin-top:4px;gap:10px;}
     .btn{padding:9px 22px;font-size:12px;letter-spacing:.18em;}
   }
@@ -447,16 +432,18 @@
 
 <div class="flash" id="flash"></div>
 
-<!-- 服务器爆满排队弹窗 -->
+<!-- 内测时间公告弹窗 -->
 <div class="modal-mask" id="modalMask">
   <div class="modal">
     <div class="m-icon"><span>!</span></div>
-    <h2 class="m-title">服务器爆满</h2>
+    <h2 class="m-title">内测时间为10月4日上午10点</h2>
     <div class="m-divider"></div>
-    <div class="m-label">当前正在排队</div>
-    <div class="m-date">
-      <span class="queue-num" id="queueNum">12998</span><small>名</small>
+    
+    <!-- 修改：移除了排队人数，保留了提示语 -->
+    <div class="m-date-text">
+      请准时上线体验
     </div>
+
     <div class="m-btns">
       <button class="btn primary" id="btnRetry">重新连接</button>
       <button class="btn" id="btnOk">确 定</button>
@@ -584,7 +571,6 @@
   const btnOk     = $('btnOk');
   const footnote  = $('footnote');
   const logoWrap  = $('logoWrap');
-  const queueNum  = $('queueNum');
 
   const NAME = '终神之战';
   const STUDIO_NAME = '墨隐工作室出品';
@@ -592,36 +578,6 @@
   /* 出品署名起始时间 & 逐字间隔（秒） */
   const STUDIO_START = 2.45;
   const STUDIO_STEP  = 0.085;
-
-  /* ---------- 排队人数配置 ---------- */
-  /* 基准时刻：以此为起点，之后每 2 小时减少 1 名 */
-  const QUEUE_BASE_TIME = new Date(2026, 8, 14, 22, 0, 0).getTime(); // 2026-09-14 22:00
-  const QUEUE_BASE_NUM  = 12998;                 // 基准排队人数
-  const QUEUE_INTERVAL  = 2 * 60 * 60 * 1000;    // 2 小时（毫秒）
-  let queueTimer = null;
-
-  /* 计算当前排队人数 */
-  function calcQueueNum() {
-    const elapsed = Date.now() - QUEUE_BASE_TIME;
-    const decrease = elapsed > 0 ? Math.floor(elapsed / QUEUE_INTERVAL) : 0;
-    return Math.max(1, QUEUE_BASE_NUM - decrease);
-  }
-
-  /* 更新显示 */
-  function updateQueueNum() {
-    queueNum.textContent = calcQueueNum();
-  }
-
-  /* 启动排队人数定时刷新（每分钟检查一次，跨过整点即变） */
-  function startQueueTimer() {
-    updateQueueNum();
-    if (queueTimer) clearInterval(queueTimer);
-    queueTimer = setInterval(updateQueueNum, 60 * 1000);
-  }
-
-  function stopQueueTimer() {
-    if (queueTimer) { clearInterval(queueTimer); queueTimer = null; }
-  }
 
   const STEPS = [
     { p: 0,   t: '正在初始化引擎...' },
@@ -682,7 +638,6 @@
   /* ---------- 播放开场 ---------- */
   function playIntro() {
     clearAll();
-    stopQueueTimer();
     gameStarted = false;
 
     barFill.style.width = '0%';
@@ -775,7 +730,6 @@
     later(() => stage.classList.add('out'), 430);
     later(function () {
       modalMask.classList.add('show');
-      startQueueTimer();   // 弹窗出现时开始计时刷新排队人数
     }, 1000);
     later(() => flash.classList.remove('go'), 1600);
   }
@@ -785,7 +739,6 @@
   /* ---------- 重新连接 ---------- */
   btnRetry.addEventListener('click', function () {
     tryLockLandscape();
-    stopQueueTimer();
     modalMask.classList.remove('show');
     later(playIntro, 450);
   });
@@ -793,7 +746,6 @@
   /* ---------- 确定 ---------- */
   btnOk.addEventListener('click', function () {
     tryLockLandscape();
-    stopQueueTimer();
     modalMask.classList.remove('show');
     later(function () {
       stage.classList.remove('out');
