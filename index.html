@@ -563,6 +563,19 @@ input[type=tel]:focus{
 }
 .lc-dl-note{margin-top:14px;font-size:.82rem;color:#6f768a}
 .lc-dl-note a{color:var(--cyan)}
+.tsr-badge{
+  margin:26px auto 0;max-width:560px;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px 20px;border-radius:12px;border:1px solid rgba(232,200,119,.25);
+  background:linear-gradient(135deg,rgba(232,200,119,.10),rgba(124,58,237,.10));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font-size:.86rem;color:#c9cfdd;letter-spacing:.05em;text-align:center;flex-wrap:wrap;
+}
+.tsr-badge .tsr-tag{
+  font-size:.72rem;font-weight:700;color:var(--gold-l);letter-spacing:.18em;
+  border:1px solid rgba(232,200,119,.4);border-radius:6px;padding:2px 8px;
+  background:rgba(232,200,119,.08);
+}
+.tsr-badge b{color:var(--gold);font-weight:800;letter-spacing:.1em}
 .lc-safe-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 30px;margin-top:34px}
 .lc-safe-strip span{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#9aa0b3}
 .lc-safe-strip svg{width:16px;height:16px;color:var(--gold)}
@@ -987,6 +1000,11 @@ body.modal-open{overflow:hidden}
         <button type="button" class="lc-dl-btn" id="lcDlBtn"><span>立即下载启动器</span></button>
         <a class="lc-dl-btn lc-dl-btn-apk" id="lcApkBtn" href="https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/apk/zhongshen_legion.apk"><span>安卓版下载（APK）</span></a>
         <p class="lc-dl-note">下载后请通过启动器内的下载流程获取游戏本体。更新游戏无需重新下载启动器，启动器会自动拉取最新游戏文件。安卓版打开后同样自动检测并更新游戏。</p>
+      </div>
+
+      <div class="tsr-badge reveal">
+        <span class="tsr-tag">自研</span>
+        <b>TSR</b> 安全系统 · 启动器内嵌环境检测引擎，五项检测 + SHA-256 完整性校验
       </div>
 
       <div class="lc-safe-strip reveal">
