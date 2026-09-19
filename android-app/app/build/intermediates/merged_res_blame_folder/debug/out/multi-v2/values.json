@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.zszz.legion.app-mergeDebugResources-2:/values/values.xml",
+            "map": [
+                {
+                    "source": "/home/runner/work/zhongshenzhizhan.github.io/zhongshenzhizhan.github.io/android-app/app/src/main/res/values/strings.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "44",
+                        "endOffsets": "95"
+                    }
+                }
+            ]
+        }
+    ]
+}
