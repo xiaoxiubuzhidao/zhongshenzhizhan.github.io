@@ -2,7 +2,7 @@
   "version": "1.6.0",
   "sha256": "1c330e0e926f552b4598ba3092aabda1543b35b2bd93892c9abc9dbcd4419aa9",
   "file": "game.html",
-  "launcher_version": "2.2.0",
-  "launcher_sha256": "7d7ee051d58c778cfe86699bbcc424d6fbe5cb52309cef2c47ab9cd272b6e3a3",
+  "launcher_version": "2.3.0",
+  "launcher_sha256": "18d26da35a124123ca5da5570efae8d964a445269ee099cc4fa267488b339ed1",
   "launcher_file": "launcher.exe"
 }
