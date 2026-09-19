@@ -542,6 +542,17 @@ input[type=tel]:focus{
   transform:translateX(-150%) skewX(-20deg);animation:lcSheen 4.6s ease-in-out infinite;pointer-events:none;
 }
 .lc-dl-btn span{position:relative;z-index:3}
+.lc-dl-btn-apk{
+  margin-top:12px;font-size:.98rem;letter-spacing:.16em;
+  background:linear-gradient(120deg,rgba(124,58,237,.95),rgba(255,255,255,.55) 22%,rgba(232,200,119,.8) 50%,rgba(255,255,255,.55) 78%,rgba(124,58,237,.95));
+  background-size:240% 240%;animation:lcRimFlow 6s linear infinite;
+}
+.lc-dl-btn-apk::before{
+  background:
+    radial-gradient(120% 90% at 12% 8%,rgba(255,255,255,.18),transparent 45%),
+    radial-gradient(130% 100% at 88% 96%,rgba(232,200,119,.16),transparent 52%),
+    linear-gradient(135deg,rgba(5,6,11,.55),rgba(5,6,11,.25) 55%,rgba(5,6,11,.5));
+}
 .lc-dl-btn:hover{transform:scale(1.03);text-shadow:0 0 24px rgba(232,200,119,.9)}
 .lc-dl-btn:hover::after{animation-duration:1.6s}
 @keyframes lcRimFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
@@ -970,11 +981,12 @@ body.modal-open{overflow:hidden}
         </div>
         <div class="lc-dl-meta">
           <span>大小<b id="lcSize">—</b></span>
-          <span>版本<b>v2.1</b></span>
+          <span>版本<b>v2.2</b></span>
           <span>校验<b id="lcSha">SHA-256</b></span>
         </div>
         <button type="button" class="lc-dl-btn" id="lcDlBtn"><span>立即下载启动器</span></button>
-        <p class="lc-dl-note">下载后请通过启动器内的下载流程获取游戏本体。更新游戏无需重新下载启动器，启动器会自动拉取最新游戏文件。</p>
+        <a class="lc-dl-btn lc-dl-btn-apk" id="lcApkBtn" href="https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/apk/zhongshen_legion.apk"><span>安卓版下载（APK）</span></a>
+        <p class="lc-dl-note">下载后请通过启动器内的下载流程获取游戏本体。更新游戏无需重新下载启动器，启动器会自动拉取最新游戏文件。安卓版打开后同样自动检测并更新游戏。</p>
       </div>
 
       <div class="lc-safe-strip reveal">
