@@ -16,16 +16,13 @@ jobs:
           java-version: '17'
       - name: Install Android SDK
         run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk
+          mkdir -p /home/runner/android-sdk/cmdline-tools
+          cd /home/runner/android-sdk
           curl -sSLo cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip -q cmdtools.zip -d cmdline-tools
           mv cmdline-tools/cmdline-tools cmdline-tools/latest
           yes | cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null 2>&1 || true
           cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;33.0.1" >/dev/null
-        env:
-          ANDROID_HOME: $HOME/android-sdk
-          ANDROID_SDK_ROOT: $HOME/android-sdk
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.4'
@@ -40,11 +37,12 @@ jobs:
           [ -f MainActivity.java ] && mv MainActivity.java android-app/app/src/main/java/com/zszz/legion/MainActivity.java
           [ -f strings.xml ] && mv strings.xml android-app/app/src/main/res/values/strings.xml
           [ -f ic_launcher.png ] && mv ic_launcher.png android-app/app/src/main/res/drawable/ic_launcher.png
+          echo "sdk.dir=/home/runner/android-sdk" > android-app/local.properties
       - name: Build APK
         run: cd android-app && gradle assembleDebug --no-daemon
         env:
-          ANDROID_HOME: $HOME/android-sdk
-          ANDROID_SDK_ROOT: $HOME/android-sdk
+          ANDROID_HOME: /home/runner/android-sdk
+          ANDROID_SDK_ROOT: /home/runner/android-sdk
       - name: Commit APK
         run: |
           git rm -r -q .github/workflows/build-apk.yml 2>/dev/null || true
