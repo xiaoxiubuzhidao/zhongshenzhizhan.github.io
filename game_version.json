@@ -1,1 +1,8 @@
-{"version":"1.3.0","sha256":"4fa099021e2fd6c1b345c5a5e222a64e0846f70a321b2169809d50acae1eb0f1","file":"game.html","launcher_version":"2.2.0","launcher_sha256":"7d7ee051d58c778cfe86699bbcc424d6fbe5cb52309cef2c47ab9cd272b6e3a3","launcher_file":"launcher.exe"}
+{
+  "version": "1.4.0",
+  "sha256": "87445f1c1eda46d2ca01e974c330d791eff38bcfb3c26e7ad6b94e76f89e3491",
+  "file": "game.html",
+  "launcher_version": "2.2.0",
+  "launcher_sha256": "7d7ee051d58c778cfe86699bbcc424d6fbe5cb52309cef2c47ab9cd272b6e3a3",
+  "launcher_file": "launcher.exe"
+}
