@@ -695,7 +695,8 @@ const DeviceSystem = (function() {
   }
 
   btnStart.addEventListener('click', function() {
-      // 前置页：点击「开始游戏」通过 zszz:// 协议唤起启动器启动游戏
+      // 前置页：点击「开始游戏」先尝试关闭本窗口（游戏已由启动器自动打开），协议作兜底
+      try { window.close(); } catch (e) {}
       try { location.href = 'zszz://launch'; } catch (e) {}
   });
 
