@@ -2,11 +2,12 @@
   "version": "1.7.0",
   "sha256": "ec60530ed8495447570c029967bcb02dad86708f412fd04e8c72db6ed93061b6",
   "file": "game.html",
-  "launcher_version": "2.6.0",
-  "launcher_sha256": "f3a4edc4c4342cda3b28ed00695eaf1503f6ac59d69efc2b853eacf2a29cbb79",
+  "launcher_version": "2.6.1",
+  "launcher_sha256": "69b4a94c6baf3f5d35d5c75a47f7d15434f2e85aa94be6eb0f2bb66a796968ee",
   "launcher_file": "launcher.exe",
   "pc_version": "1.0.0",
   "pc_file": "game_pc.zip",
   "pc_sha256": "00adefafd0bf137994c4f42f17a36e80c4920d8a3c2e12845ca3118a28579c2d",
-  "pc_url": "https://github.com/xiaoxiubuzhidao/zhongshenzhizhan.github.io/releases/download/pc-v1.0.0/game_pc.zip"
+  "pc_url": "https://github.com/xiaoxiubuzhidao/zhongshenzhizhan.github.io/releases/download/pc-v1.0.0/game_pc.zip",
+  "pc_parts": "66"
 }
