@@ -695,9 +695,16 @@ const DeviceSystem = (function() {
   }
 
   btnStart.addEventListener('click', function() {
-      // 前置页：点击「开始游戏」先尝试关闭本窗口（游戏已由启动器自动打开），协议作兜底
+      // 前置页：点击「开始游戏」→ 通知本地启动器（127.0.0.1:<port>/launch）打开游戏
+      try {
+        var m = window.location.search.match(/[?&]port=(\d+)/);
+        if (m && m[1]) {
+          window.location.href = 'http://127.0.0.1:' + m[1] + '/launch';
+          return;
+        }
+      } catch (e) {}
       try { window.close(); } catch (e) {}
-      try { location.href = 'zszz://launch'; } catch (e) {}
+      try { window.location.href = 'zszz://launch'; } catch (e) {}
   });
 
   btnOk.addEventListener('click', function () {
