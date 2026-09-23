@@ -5,9 +5,9 @@
   "launcher_version": "2.7.2",
   "launcher_sha256": "df8bf4579519708fab2a087ba91f38b08b785ec29497a348f9dfd1b2a06bfee2",
   "launcher_file": "launcher.exe",
-  "pc_version": "1.0.0",
+  "pc_version": "1.1.0",
   "pc_file": "game_pc.zip",
-  "pc_sha256": "00adefafd0bf137994c4f42f17a36e80c4920d8a3c2e12845ca3118a28579c2d",
+  "pc_sha256": "b5ad7db8ad33eb10a19a17a984643d62b6122523e2b1c08cc353ca78004bbfc3",
   "pc_url": "https://github.com/xiaoxiubuzhidao/zhongshenzhizhan.github.io/releases/download/pc-v1.0.0/game_pc.zip",
-  "pc_parts": "66"
+  "pc_parts": "113"
 }
