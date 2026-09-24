@@ -1,2132 +1,4243 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>终神之战：军团 — 全平台预约开启</title>
+
 <style>
+
 /* ===================== 基础 ===================== */
+
 *{margin:0;padding:0;box-sizing:border-box}
+
 html{scroll-behavior:smooth}
+
 body{
+
   background:#05060b;
+
   color:#e7e9f0;
+
   font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+
   overflow-x:hidden;
+
   -webkit-font-smoothing:antialiased;
+
   line-height:1.6;
+
 }
+
 :root{
+
   --gold:#e8c877;
+
   --gold-l:#f7e6b0;
+
   --gold-d:#a67c2e;
+
   --purple:#7c3aed;
+
   --cyan:#38bdf8;
+
   --green:#4ade80;
+
   --red:#ff5a5a;
+
   --line:rgba(255,255,255,.09);
+
   --panel:rgba(255,255,255,.035);
+
 }
+
 a{color:inherit}
+
 ::selection{background:rgba(232,200,119,.3)}
+
 [hidden]{display:none!important}
 
+
+
 /* ===================== 背景 ===================== */
+
 #stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
 .aura{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+
 .aura-1{width:62vw;height:62vw;background:radial-gradient(circle,rgba(124,58,237,.42),transparent 70%);top:-22vw;left:-18vw;animation:drift1 20s ease-in-out infinite}
+
 .aura-2{width:54vw;height:54vw;background:radial-gradient(circle,rgba(232,200,119,.2),transparent 70%);bottom:-18vw;right:-14vw;animation:drift2 26s ease-in-out infinite}
+
 @keyframes drift1{50%{transform:translate(6vw,5vh) scale(1.12)}}
+
 @keyframes drift2{50%{transform:translate(-5vw,-6vh) scale(1.15)}}
+
 .vignette{position:fixed;inset:0;z-index:0;pointer-events:none;
+
   background:radial-gradient(ellipse at 50% 40%,transparent 30%,rgba(5,6,11,.75) 100%)}
+
+
 
 .page{position:relative;z-index:2}
 
+
+
 /* ===================== 顶栏 ===================== */
+
 header{
+
   position:fixed;top:0;left:0;right:0;z-index:60;
+
   display:flex;align-items:center;justify-content:space-between;
+
   padding:18px clamp(20px,5vw,64px);
+
   transition:padding .35s,background .35s,backdrop-filter .35s,border-color .35s;
+
   border-bottom:1px solid transparent;
+
 }
+
 header.scrolled{
+
   padding:12px clamp(20px,5vw,64px);
+
   background:rgba(5,6,11,.78);
+
   backdrop-filter:blur(16px);
+
   -webkit-backdrop-filter:blur(16px);
+
   border-bottom-color:rgba(232,200,119,.14);
+
 }
+
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.12em;font-size:.95rem}
+
 .logo svg{width:26px;height:26px;flex:none}
+
 .logo b{background:linear-gradient(120deg,var(--gold-l),var(--gold),var(--gold-d));
+
   -webkit-background-clip:text;background-clip:text;color:transparent}
+
 nav{display:flex;gap:32px;font-size:.9rem}
+
 nav a{text-decoration:none;color:#a9aec0;transition:.25s;position:relative}
+
 nav a:hover{color:var(--gold)}
+
 nav a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;
+
   background:var(--gold);transition:width .3s}
+
 nav a:hover::after{width:100%}
+
 .top-btn{
+
   padding:10px 24px;border-radius:999px;font-size:.85rem;font-weight:700;
+
   color:#1a1206;text-decoration:none;letter-spacing:.08em;
+
   background:linear-gradient(135deg,var(--gold-l),var(--gold) 50%,#c9a04e);
+
   box-shadow:0 8px 24px -8px rgba(232,200,119,.7);
+
   transition:.3s;white-space:nowrap;
+
 }
+
 .top-btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px -8px rgba(232,200,119,.9)}
+
 @media(max-width:820px){nav{display:none}}
 
+
+
 /* ===================== HERO ===================== */
+
 .hero{
+
   min-height:100vh;
+
   display:flex;flex-direction:column;align-items:center;justify-content:center;
+
   text-align:center;padding:140px clamp(20px,6vw,60px) 90px;
+
   position:relative;
+
 }
+
 .badge{
+
   display:inline-flex;align-items:center;gap:9px;
+
   padding:7px 18px;border-radius:999px;
+
   border:1px solid rgba(232,200,119,.35);
+
   background:rgba(232,200,119,.07);
+
   font-size:.78rem;letter-spacing:.22em;color:var(--gold);
+
   margin-bottom:34px;
+
   animation:fadeUp .9s .1s both;
+
 }
+
 .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);
+
   box-shadow:0 0 10px var(--gold);animation:pulse 1.8s infinite}
+
 @keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
 
+
+
 .game-title{
+
   font-size:clamp(2.7rem,9.5vw,7rem);
+
   font-weight:900;
+
   letter-spacing:.06em;
+
   line-height:1.05;
+
   background:linear-gradient(180deg,#fffaf0 0%,var(--gold) 42%,var(--gold-d) 66%,var(--gold-l) 100%);
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
   filter:drop-shadow(0 0 44px rgba(232,200,119,.28));
+
   animation:fadeUp 1s .2s both;
+
 }
+
 .game-title .colon{
+
   background:linear-gradient(180deg,#fff,#b9a0ff);
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
   font-weight:400;padding:0 .04em;
+
 }
+
 .tagline{
+
   margin-top:24px;font-size:clamp(.95rem,2.1vw,1.22rem);
+
   color:#a5abc0;letter-spacing:.26em;font-weight:300;
+
   animation:fadeUp 1s .35s both;
+
 }
+
 .hero-actions{
+
   margin-top:48px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+
   animation:fadeUp 1s .5s both;
+
 }
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
 
+
+
 .btn{
+
   display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+
   padding:16px 40px;border-radius:999px;border:1px solid transparent;
+
   font-size:1rem;font-weight:700;letter-spacing:.1em;cursor:pointer;
+
   text-decoration:none;transition:.3s;font-family:inherit;
+
 }
+
 .btn-primary{
+
   color:#1a1206;
+
   background:linear-gradient(135deg,var(--gold-l),var(--gold) 45%,#c9a04e);
+
   box-shadow:0 12px 34px -10px rgba(232,200,119,.75),inset 0 1px 0 rgba(255,255,255,.55);
+
 }
+
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 44px -12px rgba(232,200,119,.95)}
+
 .btn-ghost{
+
   color:var(--gold);border-color:rgba(232,200,119,.38);
+
   background:rgba(232,200,119,.05);
+
 }
+
 .btn-ghost:hover{background:rgba(232,200,119,.14);border-color:rgba(232,200,119,.85);transform:translateY(-3px)}
+
 .btn-block{width:100%}
 
+
+
 .countdown{
+
   margin-top:34px;display:flex;gap:clamp(14px,3vw,34px);align-items:flex-start;justify-content:center;
+
   animation:fadeUp 1s .65s both;
+
 }
+
 .cd-item{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:62px}
+
 .cd-num{
+
   font-size:clamp(1.7rem,4.5vw,2.6rem);font-weight:800;
+
   font-variant-numeric:tabular-nums;letter-spacing:.02em;
+
   background:linear-gradient(180deg,#fff,#d8c48a);
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
 }
+
 .cd-lab{font-size:.7rem;letter-spacing:.28em;color:#7b8199}
+
 .cd-sep{font-size:1.6rem;color:rgba(232,200,119,.35);margin-top:4px}
+
 .cd-title{font-size:.76rem;letter-spacing:.3em;color:#7b8199;margin-bottom:18px}
+
 .cd-date{
+
   margin-top:20px;display:inline-flex;align-items:center;gap:10px;
+
   padding:8px 22px;border-radius:999px;
+
   border:1px solid rgba(232,200,119,.28);
+
   background:rgba(232,200,119,.06);
+
   font-size:.82rem;letter-spacing:.16em;color:var(--gold-l);
+
   animation:fadeUp 1s .72s both;
+
 }
+
 .cd-date .sep{color:rgba(232,200,119,.45)}
 
+
+
 .stat{
+
   margin-top:46px;display:inline-flex;align-items:center;gap:12px;
+
   padding:11px 26px;border-radius:999px;
+
   border:1px solid var(--line);background:rgba(255,255,255,.03);
+
   font-size:.86rem;color:#9aa0b5;backdrop-filter:blur(8px);
+
   animation:fadeUp 1s .8s both;
+
 }
+
 .stat b{color:var(--gold);font-variant-numeric:tabular-nums;font-size:1rem}
+
 .stat .live{width:7px;height:7px;border-radius:50%;background:var(--green);
+
   box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
 
+
+
 /* ===================== 通用 SECTION ===================== */
+
 section{padding:clamp(80px,11vw,140px) clamp(20px,6vw,64px)}
+
 .wrap{max-width:1200px;margin:0 auto}
+
 .sec-head{text-align:center;margin-bottom:clamp(46px,7vw,76px)}
+
 .sec-tag{
+
   font-size:.74rem;letter-spacing:.36em;color:var(--gold);
+
   text-transform:uppercase;margin-bottom:16px;opacity:.85;
+
 }
+
 .sec-title{
+
   font-size:clamp(1.7rem,4.2vw,2.7rem);font-weight:800;letter-spacing:.06em;
+
   background:linear-gradient(180deg,#fff,#c9cfe4);
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
 }
+
 .sec-desc{margin-top:16px;color:#878da3;font-size:.95rem;letter-spacing:.05em}
 
+
+
 .reveal{opacity:0;transform:translateY(30px);
+
   transition:opacity .85s cubic-bezier(.2,.75,.3,1),transform .85s cubic-bezier(.2,.75,.3,1)}
+
 .reveal.in{opacity:1;transform:none}
 
+
+
 /* ===================== 特色 ===================== */
+
 .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
+
 .f-card{
+
   padding:36px 30px;border-radius:20px;
+
   border:1px solid var(--line);
+
   background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+
   position:relative;overflow:hidden;transition:.4s;
+
 }
+
 .f-card::before{
+
   content:"";position:absolute;inset:0;border-radius:20px;padding:1px;
+
   background:linear-gradient(140deg,rgba(232,200,119,.55),transparent 42%,transparent 60%,rgba(124,58,237,.5));
+
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+
   -webkit-mask-composite:xor;mask-composite:exclude;
+
   opacity:0;transition:.4s;
+
 }
+
 .f-card:hover{transform:translateY(-8px);background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.02))}
+
 .f-card:hover::before{opacity:1}
+
 .f-num{
+
   font-size:.78rem;letter-spacing:.28em;color:rgba(232,200,119,.6);
+
   margin-bottom:22px;font-weight:700;
+
 }
+
 .f-icon{
+
   width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+
   background:linear-gradient(140deg,rgba(232,200,119,.2),rgba(124,58,237,.2));
+
   border:1px solid rgba(232,200,119,.25);margin-bottom:22px;font-size:1.4rem;
+
 }
+
 .f-card h3{font-size:1.16rem;letter-spacing:.06em;margin-bottom:12px;color:#f2f4fa}
+
 .f-card p{font-size:.9rem;color:#878da3;line-height:1.85}
 
+
+
 /* ===================== 预约表单 ===================== */
+
 .reserve-card{
+
   display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,64px);
+
   padding:clamp(32px,5vw,58px);border-radius:26px;
+
   border:1px solid rgba(232,200,119,.22);
+
   background:
+
     radial-gradient(120% 120% at 0% 0%,rgba(124,58,237,.2),transparent 55%),
+
     radial-gradient(120% 120% at 100% 100%,rgba(232,200,119,.14),transparent 55%),
+
     rgba(12,13,22,.75);
+
   backdrop-filter:blur(14px);
+
   align-items:center;
+
 }
+
 @media(max-width:860px){.reserve-card{grid-template-columns:1fr}}
+
 .rc-left h2{
+
   font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:.06em;
+
   line-height:1.35;margin-bottom:16px;
+
   background:linear-gradient(180deg,#fff,#d6c393);
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
 }
+
 .rc-left>p{color:#8b91a7;font-size:.94rem;margin-bottom:26px;line-height:1.9}
+
 .perks{list-style:none;display:flex;flex-direction:column;gap:12px}
+
 .perks li{font-size:.88rem;color:#b7bccd;display:flex;gap:10px;align-items:center}
+
 .perks li::before{content:"◆";color:var(--gold);font-size:.7rem}
 
+
+
 form{display:flex;flex-direction:column;gap:14px}
+
 .field-label{font-size:.78rem;letter-spacing:.22em;color:#8b91a7}
 
+
+
 .phone-field{position:relative}
+
 input[type=tel]{
+
   width:100%;padding:17px 52px 17px 22px;border-radius:14px;
+
   background:rgba(255,255,255,.05);
+
   border:1px solid rgba(255,255,255,.13);
+
   color:#fff;font-size:1rem;font-family:inherit;outline:none;
+
   transition:.3s;letter-spacing:.05em;
+
 }
+
 input[type=tel]::placeholder{color:#5a6078;letter-spacing:.02em}
+
 input[type=tel]:focus{
+
   border-color:rgba(232,200,119,.75);
+
   background:rgba(232,200,119,.07);
+
   box-shadow:0 0 0 4px rgba(232,200,119,.1);
+
 }
+
 .phone-icon{
+
   position:absolute;right:18px;top:50%;transform:translateY(-50%);
+
   font-size:1.05rem;font-weight:800;line-height:1;
+
   pointer-events:none;opacity:0;transition:.25s;
+
 }
+
 .phone-field.valid .phone-icon{color:var(--green);opacity:1}
+
 .phone-field.invalid .phone-icon{color:var(--red);opacity:1}
 
+
+
 .phone-field.valid input{
+
   border-color:rgba(74,222,128,.7);
+
   background:rgba(74,222,128,.07);
+
   box-shadow:0 0 0 4px rgba(74,222,128,.09);
+
 }
+
 .phone-field.invalid input{
+
   border-color:rgba(255,90,90,.8);
+
   background:rgba(255,90,90,.07);
+
   box-shadow:0 0 0 4px rgba(255,90,90,.1);
+
 }
+
 .phone-msg{
+
   font-size:.76rem;color:#61677e;letter-spacing:.05em;
+
   min-height:1.15em;text-align:left;transition:.25s;
+
 }
+
 .phone-msg.ok{color:var(--green)}
+
 .phone-msg.bad{color:#ff7a7a}
 
+
+
 .form-tip{font-size:.74rem;color:#61677e;text-align:center;line-height:1.7}
+
 .form-tip a{color:#8b91a7;text-decoration:underline;text-underline-offset:2px}
 
+
+
 .success{
+
   display:none;text-align:center;padding:20px 0;
+
   animation:fadeUp .6s both;
+
 }
+
 .success.show{display:block}
+
 .success .tick{
+
   width:66px;height:66px;border-radius:50%;margin:0 auto 22px;
+
   display:grid;place-items:center;font-size:1.9rem;color:#1a1206;
+
   background:linear-gradient(135deg,var(--gold-l),var(--gold));
+
   box-shadow:0 0 36px rgba(232,200,119,.7);
+
   animation:pop .55s cubic-bezier(.2,1.4,.4,1) both;
+
 }
+
 @keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+
 .success h3{font-size:1.2rem;letter-spacing:.1em;margin-bottom:12px;color:var(--gold)}
+
 .success p{font-size:.88rem;color:#8b91a7;line-height:1.9}
+
 .success .seat{
+
   display:inline-block;margin-top:18px;padding:8px 20px;border-radius:999px;
+
   border:1px dashed rgba(232,200,119,.5);font-size:.8rem;
+
   color:var(--gold);letter-spacing:.14em;
+
 }
+
+
 
 /* ===================== 抽奖弹窗 ===================== */
+
 .lottery-modal .modal-card{width:min(520px,100%)}
+
 .lottery-body{
+
   padding:26px clamp(22px,4vw,32px) 30px;
+
   overflow-y:auto;overscroll-behavior:contain;
+
 }
+
 .lottery-body::-webkit-scrollbar{width:7px}
+
 .lottery-body::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+
 .lottery-body::-webkit-scrollbar-thumb{
+
   background:linear-gradient(180deg,var(--gold-d),var(--gold));
+
   border-radius:99px;border:2px solid #0b0c14;
+
 }
+
+
 
 .lottery-success{
+
   text-align:center;padding-bottom:22px;
+
   border-bottom:1px dashed rgba(232,200,119,.22);margin-bottom:22px;
+
 }
+
 .lottery-success .tick{
+
   width:56px;height:56px;border-radius:50%;
+
   margin:0 auto 14px;display:grid;place-items:center;
+
   font-size:1.6rem;color:#1a1206;
+
   background:linear-gradient(135deg,var(--gold-l),var(--gold));
+
   box-shadow:0 0 30px rgba(232,200,119,.65);
+
   animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;
+
 }
+
 .lottery-success h4{
+
   font-size:1.02rem;letter-spacing:.12em;color:var(--gold);
+
   margin-bottom:8px;font-weight:800;
+
 }
+
 .lottery-success p{font-size:.82rem;color:#8b91a7;letter-spacing:.05em}
+
 .lottery-success p b{
+
   color:var(--gold-l);font-variant-numeric:tabular-nums;letter-spacing:.08em;
+
 }
+
+
 
 .lottery-stage{
+
   padding:28px 22px;border-radius:18px;
+
   border:1px solid rgba(232,200,119,.3);
+
   background:radial-gradient(120% 120% at 50% 0%,rgba(232,200,119,.14),rgba(232,200,119,.03));
+
   animation:fadeUp .5s both;text-align:center;
+
 }
+
 .draw-num{
+
   font-size:clamp(2rem,7vw,2.8rem);font-weight:900;
+
   letter-spacing:.18em;font-variant-numeric:tabular-nums;
+
   background:linear-gradient(180deg,#fff,#d8c48a);
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
   filter:drop-shadow(0 0 22px rgba(232,200,119,.45));
+
 }
+
 .draw-text{
+
   margin-top:12px;font-size:.8rem;color:#8b91a7;letter-spacing:.24em;
+
   animation:blink 1.1s ease-in-out infinite;
+
 }
+
 @keyframes blink{50%{opacity:.35}}
 
+
+
 .result-card{padding:32px 24px;border-radius:20px;text-align:center}
+
 .result-card.win{
+
   border:1px solid rgba(232,200,119,.6);
+
   background:linear-gradient(150deg,rgba(232,200,119,.18),rgba(232,200,119,.03));
+
   animation:pop .55s cubic-bezier(.2,1.4,.4,1) both, glow 2.2s ease-in-out infinite .55s;
+
 }
+
 @keyframes glow{
+
   0%,100%{box-shadow:0 0 34px -12px rgba(232,200,119,.55)}
+
   50%{box-shadow:0 0 62px -8px rgba(232,200,119,.95)}
+
 }
+
 .result-card.lose{
+
   border:1px solid rgba(255,255,255,.12);
+
   background:rgba(255,255,255,.028);
+
   animation:fadeUp .55s both;
+
 }
+
 .result-icon{font-size:2.6rem;margin-bottom:14px;line-height:1}
+
 .result-card h4{font-size:1.12rem;letter-spacing:.12em;margin-bottom:12px}
+
 .result-card.win h4{color:var(--gold)}
+
 .result-card.lose h4{color:#9aa0b5}
+
 .result-card p{font-size:.85rem;color:#8b91a7;line-height:1.9}
+
 .result-card .code{
+
   display:inline-block;margin-top:18px;padding:12px 24px;border-radius:12px;
+
   font-family:ui-monospace,"SF Mono",Consolas,monospace;
+
   font-size:1rem;letter-spacing:.16em;font-weight:700;
+
   color:var(--gold-l);background:rgba(0,0,0,.4);
+
   border:1px dashed rgba(232,200,119,.55);
+
   text-shadow:0 0 18px rgba(232,200,119,.5);
+
 }
+
 .result-card .again{
+
   display:block;margin-top:20px;font-size:.74rem;color:#61677e;letter-spacing:.1em;
+
 }
+
+
 
 /* ===================== 内测版下载弹窗 ===================== */
+
 .download-modal .modal-card{width:min(440px,100%)}
+
 .download-body{
+
   padding:32px clamp(24px,5vw,38px) 34px;
+
   text-align:center;
+
 }
+
 .download-icon{
+
   width:76px;height:76px;border-radius:22px;margin:0 auto 22px;
+
   display:grid;place-items:center;font-size:2.1rem;line-height:1;
+
   background:linear-gradient(140deg,rgba(232,200,119,.24),rgba(124,58,237,.2));
+
   border:1px solid rgba(232,200,119,.42);
+
   box-shadow:0 0 36px -8px rgba(232,200,119,.55);
+
   animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;
+
 }
+
 .download-body h3{
+
   font-size:1.22rem;font-weight:800;letter-spacing:.1em;color:var(--gold-l);
+
   margin-bottom:12px;line-height:1.5;
+
 }
+
 .download-body>p{
+
   font-size:.86rem;color:#8b91a7;line-height:1.95;margin-bottom:28px;
+
 }
+
 .download-body>p b{color:var(--gold-l);font-weight:600}
+
 .download-actions{display:flex;flex-direction:column;gap:12px}
+
 .btn-download{
+
   display:inline-flex;align-items:center;justify-content:center;gap:.55em;
+
   padding:16px 34px;border-radius:999px;border:none;cursor:pointer;
+
   font-family:inherit;font-size:.97rem;font-weight:800;letter-spacing:.12em;
+
   color:#1a1206;
+
   background:linear-gradient(135deg,var(--gold-l),var(--gold) 50%,#c9a04e);
+
   box-shadow:0 12px 30px -10px rgba(232,200,119,.85),inset 0 1px 0 rgba(255,255,255,.55);
+
   transition:.3s;
+
 }
+
 .btn-download:hover{transform:translateY(-2px);box-shadow:0 18px 40px -10px rgba(232,200,119,1)}
+
 .btn-download:active{transform:translateY(-1px) scale(.99)}
+
 .btn-download .arr{font-size:1.15rem;line-height:1}
+
 .btn-skip{
+
   padding:13px 22px;border-radius:999px;cursor:pointer;
+
   font-family:inherit;font-size:.84rem;letter-spacing:.1em;
+
   color:#767c92;background:none;border:1px solid rgba(255,255,255,.13);
+
   transition:.28s;
+
 }
+
 .btn-skip:hover{color:#c3c8d8;border-color:rgba(255,255,255,.32)}
+
 .download-note{
+
   margin-top:20px;font-size:.72rem;color:#5f6579;letter-spacing:.05em;line-height:1.8;
+
 }
+
+
 
 /* ===================== 启动器下载弹窗（融合独立启动器页） ===================== */
+
 .launcher-modal .modal-card{width:min(460px,100%)}
+
 .launcher-body{padding:30px clamp(24px,5vw,38px) 32px;text-align:center}
+
 .launcher-icon{
+
   width:76px;height:76px;border-radius:22px;margin:0 auto 20px;
+
   display:grid;place-items:center;
+
   background:linear-gradient(140deg,rgba(232,200,119,.24),rgba(56,189,248,.16));
+
   border:1px solid rgba(232,200,119,.42);
+
   box-shadow:0 0 36px -8px rgba(232,200,119,.55);
+
   animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;
+
 }
+
 .launcher-body h3{font-size:1.2rem;font-weight:800;letter-spacing:.1em;color:var(--gold-l);margin-bottom:12px;line-height:1.5}
+
 .launcher-flow{
+
   display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;
+
   font-size:.78rem;color:#8b91a7;letter-spacing:.04em;margin-bottom:22px;line-height:2;
+
 }
+
 .launcher-flow b{color:var(--gold);font-weight:700;white-space:nowrap}
+
 .launcher-flow .sep{color:rgba(255,255,255,.25)}
+
 .launcher-meta{
+
   border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);
+
   padding:14px 18px;margin-bottom:24px;text-align:left;
+
 }
+
 .launcher-meta .row{
+
   display:flex;justify-content:space-between;align-items:center;gap:14px;
+
   font-size:.8rem;color:#9aa0b3;padding:7px 0;
+
 }
+
 .launcher-meta .row+.row{border-top:1px dashed rgba(255,255,255,.07)}
+
 .launcher-meta .row b{color:#e2e5ef;font-weight:600}
+
 .launcher-meta code{
+
   font-size:.72rem;color:var(--cyan);background:rgba(56,189,248,.08);
+
   border:1px solid rgba(56,189,248,.25);border-radius:6px;padding:3px 8px;
+
   letter-spacing:.04em;
+
 }
+
 .launcher-actions{display:flex;flex-direction:column;gap:12px}
+
 .launcher-note{margin-top:20px;font-size:.72rem;color:#5f6579;letter-spacing:.05em;line-height:1.8}
+
 .launcher-note b{color:#8b91a7;font-weight:600}
 
+
+
 /* ===================== 启动器下载区块（融合独立启动器页） ===================== */
+
 .lc-sec{scroll-margin-top:90px}
+
 .lc-sec .sec-head{margin-bottom:34px}
+
 .lc-flow{margin-top:14px;color:#6f768a;font-size:.88rem;letter-spacing:.06em;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 12px}
+
 .lc-flow b{color:var(--gold);font-weight:600}
+
 .lc-flow span{color:var(--gold);opacity:.55;line-height:1}
+
 .lc-dl-card{
+
   margin:38px auto 0;max-width:560px;position:relative;
+
   border:1px solid var(--line);border-radius:16px;
+
   background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+
   padding:34px 30px 30px;
+
   box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);
+
 }
+
 .lc-dl-card::before{
+
   content:"";position:absolute;inset:0;border-radius:16px;padding:1px;pointer-events:none;
+
   background:linear-gradient(135deg,rgba(232,200,119,.5),transparent 30%,transparent 70%,rgba(124,58,237,.4));
+
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+
   -webkit-mask-composite:xor;mask-composite:exclude;
+
 }
+
 .lc-dl-head{display:flex;align-items:center;gap:14px;text-align:left}
+
 .lc-dl-icon{
+
   width:52px;height:52px;flex:none;border-radius:12px;display:grid;place-items:center;
+
   background:linear-gradient(140deg,rgba(232,200,119,.18),rgba(124,58,237,.16));
+
   border:1px solid rgba(232,200,119,.3);
+
 }
+
 .lc-dl-icon svg{width:26px;height:26px}
+
 .lc-dl-head .t{font-weight:800;font-size:1.05rem;letter-spacing:.04em}
+
 .lc-dl-head .m{font-size:.8rem;color:#8b92a6;margin-top:2px}
+
 .lc-dl-meta{display:flex;justify-content:center;gap:26px;margin:22px 0 4px;font-size:.78rem;color:#8b92a6}
+
 .lc-dl-meta span b{display:block;color:#d5d9e6;font-weight:600;font-size:.9rem;margin-bottom:1px}
+
 .lc-dl-btn{
+
   display:block;width:100%;position:relative;isolation:isolate;overflow:hidden;
+
   margin-top:22px;padding:16px 20px;font-size:1.08rem;font-weight:800;letter-spacing:.2em;
+
   color:var(--gold-l);text-shadow:0 0 16px rgba(232,200,119,.5);
+
   border:none;cursor:pointer;text-decoration:none;
+
   clip-path:polygon(4% 0,100% 0,100% 72%,96% 100%,0 100%,0 28%);
+
   background:linear-gradient(120deg,rgba(232,200,119,.95),rgba(255,255,255,.65) 22%,rgba(124,58,237,.85) 50%,rgba(255,255,255,.65) 78%,rgba(232,200,119,.95));
+
   background-size:240% 240%;animation:lcRimFlow 6s linear infinite;
+
   transition:transform .3s ease,text-shadow .3s ease;
+
   -webkit-tap-highlight-color:transparent;
+
 }
+
 .lc-dl-btn::before{
+
   content:"";position:absolute;inset:1.5px;z-index:1;
+
   clip-path:polygon(4% 0,100% 0,100% 72%,96% 100%,0 100%,0 28%);
+
   background:
+
     radial-gradient(120% 90% at 12% 8%,rgba(255,255,255,.2),transparent 45%),
+
     radial-gradient(130% 100% at 88% 96%,rgba(124,58,237,.18),transparent 52%),
+
     linear-gradient(135deg,rgba(5,6,11,.55),rgba(5,6,11,.25) 55%,rgba(5,6,11,.5));
+
   backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);
+
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+
   animation:lcGlowBreath 3.6s ease-in-out infinite;
+
 }
+
 .lc-dl-btn::after{
+
   content:"";position:absolute;top:0;left:0;width:55%;height:100%;z-index:2;
+
   background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);
+
   transform:translateX(-150%) skewX(-20deg);animation:lcSheen 4.6s ease-in-out infinite;pointer-events:none;
+
 }
+
 .lc-dl-btn span{position:relative;z-index:3}
+
 .lc-dl-btn-apk{
+
   margin-top:12px;font-size:.98rem;letter-spacing:.16em;
+
   background:linear-gradient(120deg,rgba(124,58,237,.95),rgba(255,255,255,.55) 22%,rgba(232,200,119,.8) 50%,rgba(255,255,255,.55) 78%,rgba(124,58,237,.95));
+
   background-size:240% 240%;animation:lcRimFlow 6s linear infinite;
+
 }
+
 .lc-dl-btn-apk::before{
+
   background:
+
     radial-gradient(120% 90% at 12% 8%,rgba(255,255,255,.18),transparent 45%),
+
     radial-gradient(130% 100% at 88% 96%,rgba(232,200,119,.16),transparent 52%),
+
     linear-gradient(135deg,rgba(5,6,11,.55),rgba(5,6,11,.25) 55%,rgba(5,6,11,.5));
+
 }
+
 .lc-dl-btn:hover{transform:scale(1.03);text-shadow:0 0 24px rgba(232,200,119,.9)}
+
 .lc-dl-btn:hover::after{animation-duration:1.6s}
+
 @keyframes lcRimFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
 @keyframes lcSheen{0%,52%{transform:translateX(-150%) skewX(-20deg)}88%,100%{transform:translateX(320%) skewX(-20deg)}}
+
 @keyframes lcGlowBreath{
+
   0%,100%{box-shadow:inset 0 0 16px rgba(124,58,237,.1),inset 0 1px 0 rgba(255,255,255,.18)}
+
   50%{box-shadow:inset 0 0 30px rgba(232,200,119,.2),inset 0 1px 0 rgba(255,255,255,.26)}
+
 }
+
 .lc-dl-note{margin-top:14px;font-size:.82rem;color:#6f768a}
+
 .lc-dl-note a{color:var(--cyan)}
+
 .tsr-badge{
+
   margin:26px auto 0;max-width:560px;display:flex;align-items:center;justify-content:center;gap:10px;
+
   padding:12px 20px;border-radius:12px;border:1px solid rgba(232,200,119,.25);
+
   background:linear-gradient(135deg,rgba(232,200,119,.10),rgba(124,58,237,.10));
+
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+
   font-size:.86rem;color:#c9cfdd;letter-spacing:.05em;text-align:center;flex-wrap:wrap;
+
 }
+
 .tsr-badge .tsr-tag{
+
   font-size:.72rem;font-weight:700;color:var(--gold-l);letter-spacing:.18em;
+
   border:1px solid rgba(232,200,119,.4);border-radius:6px;padding:2px 8px;
+
   background:rgba(232,200,119,.08);
+
 }
+
 .tsr-badge b{color:var(--gold);font-weight:800;letter-spacing:.1em}
+
 .lc-safe-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 30px;margin-top:34px}
+
 .lc-safe-strip span{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#9aa0b3}
+
 .lc-safe-strip svg{width:16px;height:16px;color:var(--gold)}
+
 .lc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+
 .lc-step{
+
   border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:28px 22px;
+
   position:relative;overflow:hidden;transition:border-color .3s,transform .3s;
+
 }
+
 .lc-step:hover{border-color:rgba(232,200,119,.4);transform:translateY(-4px)}
+
 .lc-step .n{
+
   font-size:.78rem;letter-spacing:.2em;color:var(--gold-d);
+
   border:1px solid rgba(232,200,119,.3);border-radius:999px;
+
   width:34px;height:34px;display:grid;place-items:center;margin-bottom:16px;
+
   background:rgba(232,200,119,.08);font-weight:700;
+
 }
+
 .lc-step h3{font-size:1.02rem;letter-spacing:.05em;margin-bottom:8px}
+
 .lc-step p{font-size:.9rem;color:#9aa0b3}
+
 .lc-step .ic{position:absolute;right:-8px;bottom:-8px;width:88px;height:88px;opacity:.06;pointer-events:none}
+
 .lc-step .ic svg{width:100%;height:100%}
+
 .lc-grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px}
+
 .lc-panel{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:26px 24px}
+
 .lc-panel h3{font-size:1rem;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
 .lc-panel h3 .g{width:10px;height:10px;flex:none;background:linear-gradient(135deg,var(--gold),var(--gold-d));transform:rotate(45deg)}
+
 .lc-panel ul{list-style:none}
+
 .lc-panel li{font-size:.85rem;color:#a9aec0;padding:7px 0 7px 20px;position:relative;border-bottom:1px dashed rgba(255,255,255,.06)}
+
 .lc-panel li:last-child{border-bottom:none}
+
 .lc-panel li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-left:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold);transform:rotate(-45deg)}
+
 .lc-faq{margin-top:26px;max-width:820px;margin-left:auto;margin-right:auto}
+
 .lc-faq details{border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-top:12px;overflow:hidden}
+
 .lc-faq summary{
+
   cursor:pointer;padding:16px 20px;font-size:.92rem;font-weight:600;letter-spacing:.04em;
+
   display:flex;justify-content:space-between;align-items:center;list-style:none;
+
 }
+
 .lc-faq summary::-webkit-details-marker{display:none}
+
 .lc-faq summary::after{content:"+";font-size:1.1rem;color:var(--gold);transition:transform .25s}
+
 .lc-faq details[open] summary::after{transform:rotate(45deg)}
+
 .lc-faq details p{padding:0 20px 16px;font-size:.85rem;color:#9aa0b3}
+
 @media (max-width:820px){
+
   .lc-steps{grid-template-columns:1fr}
+
   .lc-grid2{grid-template-columns:1fr}
+
   .lc-dl-card{padding:26px 18px 22px}
+
 }
+
 @media (prefers-reduced-motion:reduce){
+
   .lc-dl-btn,.lc-dl-btn::before,.lc-dl-btn::after{animation:none;transition:none}
+
 }
+
+
 
 /* ===================== 页脚 ===================== */
 
+
+
 footer{
+
   padding:60px clamp(20px,6vw,64px) 46px;text-align:center;
+
   border-top:1px solid var(--line);position:relative;z-index:2;
+
 }
+
 footer .f-logo{
+
   font-size:1.05rem;font-weight:800;letter-spacing:.24em;margin-bottom:18px;
+
   background:linear-gradient(120deg,var(--gold-l),var(--gold),var(--gold-d));
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
 }
+
 footer p{font-size:.78rem;color:#5a6078;line-height:2}
+
 footer .links{margin:18px 0;display:flex;gap:26px;justify-content:center;flex-wrap:wrap}
+
 footer .links button{
+
   font-size:.78rem;color:#767c92;background:none;border:none;
+
   font-family:inherit;cursor:pointer;padding:0;transition:.25s;
+
   text-underline-offset:3px;
+
 }
+
 footer .links button:hover{color:var(--gold);text-decoration:underline}
 
+
+
 /* ===================== 公告悬浮窗 ===================== */
+
 .notice-fab{
+
   position:fixed;right:24px;bottom:24px;z-index:180;
+
   width:58px;height:58px;border-radius:50%;
+
   display:grid;place-items:center;cursor:pointer;padding:0;
+
   background:
+
     radial-gradient(120% 120% at 30% 20%,rgba(232,200,119,.25),transparent 60%),
+
     radial-gradient(120% 120% at 80% 90%,rgba(124,58,237,.25),transparent 60%),
+
     rgba(12,13,22,.92);
+
   border:1px solid rgba(232,200,119,.5);
+
   box-shadow:0 14px 36px -12px rgba(0,0,0,.9);
+
   backdrop-filter:blur(12px);
+
   -webkit-backdrop-filter:blur(12px);
+
   transition:transform .3s,border-color .3s,box-shadow .3s;
+
 }
+
 .notice-fab:hover{transform:translateY(-3px) scale(1.05);border-color:var(--gold);
+
   box-shadow:0 18px 40px -12px rgba(232,200,119,.5)}
+
 .notice-fab:active{transform:translateY(-1px) scale(1.02)}
+
 .notice-fab svg{width:26px;height:26px;stroke:var(--gold);fill:none;
+
   stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
 .notice-fab.has-unread{animation:fabPulse 2.6s ease-in-out infinite}
+
 @keyframes fabPulse{
+
   0%,100%{box-shadow:0 14px 36px -12px rgba(0,0,0,.9),0 0 0 0 rgba(232,200,119,.55)}
+
   50%{box-shadow:0 14px 36px -12px rgba(0,0,0,.9),0 0 0 15px rgba(232,200,119,0)}
+
 }
+
 .notice-dot{
+
   position:absolute;top:9px;right:9px;width:11px;height:11px;border-radius:50%;
+
   background:var(--red);border:2px solid #0b0c14;
+
   box-shadow:0 0 10px rgba(255,90,90,.9);
+
 }
+
+
 
 .notice-panel{
+
   position:fixed;right:24px;bottom:96px;z-index:180;
+
   width:min(372px,calc(100vw - 40px));
+
   max-height:min(68vh,580px);
+
   display:flex;flex-direction:column;
+
   border-radius:20px;
+
   border:1px solid rgba(232,200,119,.32);
+
   background:
+
     radial-gradient(120% 90% at 0% 0%,rgba(124,58,237,.18),transparent 55%),
+
     radial-gradient(120% 90% at 100% 100%,rgba(232,200,119,.12),transparent 55%),
+
     #0b0c14;
+
   box-shadow:0 34px 80px -26px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.03);
+
   opacity:0;visibility:hidden;
+
   transform:translateY(16px) scale(.96);
+
   transform-origin:bottom right;
+
   transition:opacity .32s,visibility .32s,transform .38s cubic-bezier(.2,.8,.3,1);
+
   overflow:hidden;
+
 }
+
 .notice-panel.open{opacity:1;visibility:visible;transform:none}
 
+
+
 .notice-head{
+
   flex:none;display:flex;align-items:center;justify-content:space-between;
+
   gap:12px;padding:20px 22px;
+
   border-bottom:1px solid rgba(232,200,119,.16);
+
 }
+
 .notice-head h4{
+
   font-size:1rem;font-weight:800;letter-spacing:.14em;
+
   background:linear-gradient(120deg,var(--gold-l),var(--gold),var(--gold-d));
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
   display:flex;align-items:center;gap:9px;
+
 }
+
 .notice-head h4::before{
+
   content:"";width:7px;height:7px;border-radius:50%;
+
   background:var(--gold);box-shadow:0 0 10px var(--gold);
+
 }
+
 .notice-close{
+
   width:32px;height:32px;flex:none;border-radius:50%;cursor:pointer;
+
   display:grid;place-items:center;font-size:.95rem;line-height:1;
+
   color:#9aa0b5;background:rgba(255,255,255,.05);
+
   border:1px solid rgba(255,255,255,.1);
+
   transition:.28s;font-family:inherit;
+
 }
+
 .notice-close:hover{color:var(--gold);border-color:rgba(232,200,119,.6);
+
   background:rgba(232,200,119,.1);transform:rotate(90deg)}
+
+
 
 .notice-body{
+
   padding:8px 22px 22px;overflow-y:auto;
+
   overscroll-behavior:contain;
+
 }
+
 .notice-body::-webkit-scrollbar{width:7px}
+
 .notice-body::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+
 .notice-body::-webkit-scrollbar-thumb{
+
   background:linear-gradient(180deg,var(--gold-d),var(--gold));
+
   border-radius:99px;border:2px solid #0b0c14;
+
 }
+
+
 
 .notice-item{
+
   padding:18px 0;border-bottom:1px dashed rgba(255,255,255,.09);
+
 }
+
 .notice-item:last-child{border-bottom:none}
+
 .notice-item-head{
+
   display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px;
+
 }
+
 .notice-tag{
+
   padding:2px 10px;border-radius:999px;font-size:.68rem;letter-spacing:.14em;
+
   color:var(--gold);border:1px solid rgba(232,200,119,.45);
+
   background:rgba(232,200,119,.08);
+
 }
+
 .notice-date{font-size:.72rem;color:#5f6579;letter-spacing:.08em}
+
 .notice-new{
+
   margin-left:auto;font-size:.62rem;font-weight:800;letter-spacing:.14em;
+
   color:#1a1206;padding:2px 8px;border-radius:999px;
+
   background:linear-gradient(135deg,var(--gold-l),var(--gold));
+
   box-shadow:0 0 14px rgba(232,200,119,.6);
+
 }
+
 .notice-item h5{
+
   font-size:.93rem;font-weight:700;color:#e6e9f2;
+
   letter-spacing:.04em;margin-bottom:8px;line-height:1.6;
+
 }
+
 .notice-item p{font-size:.83rem;color:#8b91a7;line-height:1.95}
+
 .notice-empty{padding:34px 0;text-align:center;font-size:.85rem;color:#5f6579}
 
+
+
 @media(max-width:600px){
+
   .notice-fab{right:16px;bottom:16px;width:52px;height:52px}
+
   .notice-fab svg{width:23px;height:23px}
+
   .notice-panel{right:16px;bottom:80px;width:calc(100vw - 32px)}
+
 }
+
+
 
 /* ===================== 弹窗（协议） ===================== */
+
 .modal{
+
   position:fixed;inset:0;z-index:300;
+
   display:flex;align-items:center;justify-content:center;
+
   padding:clamp(16px,4vw,40px);
+
   background:rgba(3,4,9,.82);
+
   backdrop-filter:blur(8px);
+
   -webkit-backdrop-filter:blur(8px);
+
   opacity:0;visibility:hidden;
+
   transition:opacity .35s,visibility .35s;
+
 }
+
 .modal.open{opacity:1;visibility:visible}
 
+
+
 .modal-card{
+
   width:min(720px,100%);
+
   max-height:min(82vh,780px);
+
   display:flex;flex-direction:column;
+
   border-radius:22px;
+
   border:1px solid rgba(232,200,119,.3);
+
   background:
+
     radial-gradient(120% 90% at 0% 0%,rgba(124,58,237,.18),transparent 55%),
+
     radial-gradient(120% 90% at 100% 100%,rgba(232,200,119,.12),transparent 55%),
+
     #0b0c14;
+
   box-shadow:0 40px 90px -30px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.03);
+
   transform:translateY(24px) scale(.97);
+
   transition:transform .4s cubic-bezier(.2,.8,.3,1);
+
   overflow:hidden;
+
 }
+
 .modal.open .modal-card{transform:none}
 
+
+
 .modal-head{
+
   display:flex;align-items:center;justify-content:space-between;
+
   gap:16px;padding:24px clamp(22px,4vw,36px);
+
   border-bottom:1px solid rgba(232,200,119,.16);
+
   flex:none;
+
 }
+
 .modal-head h3{
+
   font-size:clamp(1.05rem,2.4vw,1.3rem);font-weight:800;letter-spacing:.1em;
+
   background:linear-gradient(120deg,var(--gold-l),var(--gold),var(--gold-d));
+
   -webkit-background-clip:text;background-clip:text;color:transparent;
+
 }
+
 .modal-close{
+
   width:38px;height:38px;flex:none;border-radius:50%;cursor:pointer;
+
   display:grid;place-items:center;font-size:1.1rem;line-height:1;
+
   color:#9aa0b5;background:rgba(255,255,255,.05);
+
   border:1px solid rgba(255,255,255,.1);
+
   transition:.28s;font-family:inherit;
+
 }
+
 .modal-close:hover{color:var(--gold);border-color:rgba(232,200,119,.6);
+
   background:rgba(232,200,119,.1);transform:rotate(90deg)}
 
+
+
 .modal-body{
+
   padding:clamp(22px,4vw,34px) clamp(22px,4vw,36px) clamp(30px,4vw,42px);
+
   overflow-y:auto;font-size:.9rem;color:#a8aec2;line-height:2;
+
   overscroll-behavior:contain;
+
 }
+
 .modal-body::-webkit-scrollbar{width:8px}
+
 .modal-body::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+
 .modal-body::-webkit-scrollbar-thumb{
+
   background:linear-gradient(180deg,var(--gold-d),var(--gold));
+
   border-radius:99px;border:2px solid #0b0c14;
+
 }
+
 .modal-body h4{
+
   color:var(--gold-l);font-size:.96rem;letter-spacing:.06em;
+
   margin:26px 0 10px;
+
 }
+
 .modal-body h4:first-child{margin-top:0}
+
 .modal-body p{margin-bottom:12px}
+
 .modal-body ul{margin:0 0 14px 0;padding-left:20px}
+
 .modal-body li{margin-bottom:8px}
+
 .modal-body li::marker{color:var(--gold-d)}
+
 .modal-body strong{color:#e2e5ef;font-weight:600}
+
 .modal-body .meta{
+
   margin-top:26px;padding-top:18px;border-top:1px dashed rgba(255,255,255,.12);
+
   font-size:.78rem;color:#5f6579;letter-spacing:.06em;
+
 }
+
 .modal-body a{color:var(--gold);text-decoration:none}
+
 .modal-body a:hover{text-decoration:underline}
 
+
+
 .modal-foot{
+
   padding:16px clamp(22px,4vw,36px);flex:none;
+
   border-top:1px solid rgba(232,200,119,.16);
+
   display:flex;justify-content:flex-end;
+
   background:rgba(255,255,255,.015);
+
 }
+
 .modal-ok{
+
   padding:11px 32px;border-radius:999px;cursor:pointer;
+
   font-family:inherit;font-size:.86rem;font-weight:700;letter-spacing:.1em;
+
   color:#1a1206;border:none;
+
   background:linear-gradient(135deg,var(--gold-l),var(--gold) 50%,#c9a04e);
+
   box-shadow:0 10px 26px -10px rgba(232,200,119,.8);
+
   transition:.3s;
+
 }
+
 .modal-ok:hover{transform:translateY(-2px);box-shadow:0 16px 32px -10px rgba(232,200,119,.95)}
+
+
 
 body.modal-open{overflow:hidden}
 
+
+
 /* ===================== Toast ===================== */
+
 .toast{
+
   position:fixed;left:50%;bottom:44px;transform:translate(-50%,26px);
+
   padding:14px 30px;border-radius:999px;font-size:.88rem;letter-spacing:.06em;
+
   background:rgba(16,17,26,.96);border:1px solid rgba(232,200,119,.45);
+
   color:var(--gold);box-shadow:0 18px 44px -14px rgba(0,0,0,.9);
+
   opacity:0;transition:.4s cubic-bezier(.2,.8,.3,1);z-index:400;
+
   backdrop-filter:blur(10px);pointer-events:none;white-space:nowrap;
+
 }
+
 .toast.show{opacity:1;transform:translate(-50%,0)}
+
 </style>
+
 </head>
+
 <body>
 
+
+
 <canvas id="stars"></canvas>
+
 <div class="aura aura-1"></div>
+
 <div class="aura aura-2"></div>
+
 <div class="vignette"></div>
+
+
 
 <div class="page">
 
+
+
   <!-- ============ 顶栏 ============ -->
+
   <header id="header">
+
     <div class="logo">
+
       <svg viewBox="0 0 24 24" fill="none">
+
         <path d="M12 2l8 3.5v6c0 5-3.4 9.2-8 10.5-4.6-1.3-8-5.5-8-10.5v-6L12 2z"
+
               stroke="#e8c877" stroke-width="1.4" stroke-linejoin="round"/>
+
         <path d="M12 7l1.6 3.3 3.6.5-2.6 2.5.6 3.6-3.2-1.7-3.2 1.7.6-3.6-2.6-2.5 3.6-.5L12 7z"
+
               fill="#e8c877" opacity=".85"/>
+
       </svg>
+
       <b>终神之战：军团</b>
+
     </div>
+
     <nav>
+
       <a href="#features">游戏特色</a>
+
       <a href="#reserve">立即预约</a>
+
     </nav>
+
     <a href="#reserve" class="top-btn">预约游戏</a>
+
   </header>
 
+
+
   <!-- ============ HERO ============ -->
+
   <section class="hero">
+
     <div class="badge"><span class="dot"></span>全平台预约现已开启</div>
 
+
+
     <h1 class="game-title">终神之战<span class="colon">：</span>军团</h1>
+
     <p class="tagline">当诸神陨落 · 凡人举起最后的战旗</p>
 
+
+
     <div class="hero-actions">
+
       <a href="#reserve" class="btn btn-primary">立即预约</a>
+
       <button type="button" class="btn btn-ghost" id="launcherOpenBtn">下载启动器</button>
+
       <a href="#features" class="btn btn-ghost">游戏特色</a>
+
     </div>
+
+
 
     <div style="margin-top:58px">
+
       <div class="cd-title">内测开启倒计时</div>
+
       <div class="countdown">
+
         <div class="cd-item"><div class="cd-num" id="cdD">00</div><div class="cd-lab">天</div></div>
+
         <div class="cd-sep">:</div>
+
         <div class="cd-item"><div class="cd-num" id="cdH">00</div><div class="cd-lab">时</div></div>
+
         <div class="cd-sep">:</div>
+
         <div class="cd-item"><div class="cd-num" id="cdM">00</div><div class="cd-lab">分</div></div>
+
         <div class="cd-sep">:</div>
+
         <div class="cd-item"><div class="cd-num" id="cdS">00</div><div class="cd-lab">秒</div></div>
+
       </div>
+
       <div class="cd-date">
+
         <span>2027 年 2 月 3 日</span>
+
         <span class="sep">·</span>
+
         <span>10:00 内测开启</span>
+
       </div>
+
     </div>
+
+
 
     <div class="stat">
+
       <span class="live"></span>
+
       已有 <b id="heroCount">192</b> 位战士加入军团
+
     </div>
+
   </section>
+
+
 
   <!-- ============ 特色 ============ -->
+
   <section id="features">
+
     <div class="wrap">
+
       <div class="sec-head reveal">
+
         <div class="sec-tag">GAME FEATURES</div>
+
         <h2 class="sec-title">诸神黄昏后的新纪元</h2>
+
         <p class="sec-desc">一个由玩家亲手书写结局的沙盘世界</p>
+
       </div>
+
+
 
       <div class="features">
+
         <div class="f-card reveal">
+
           <div class="f-num">01</div>
+
           <div class="f-icon">⚔️</div>
+
           <h3>神格觉醒</h3>
+
           <p>击败陨落的神明，夺取其神格碎片。每一次觉醒都会重塑你的技能树与战斗形态，没有两条相同的成神之路。</p>
+
         </div>
+
         <div class="f-card reveal" style="transition-delay:.1s">
+
           <div class="f-num">02</div>
+
           <div class="f-icon">🛡️</div>
+
           <h3>万人军团战</h3>
+
           <p>四大军团争夺大陆霸权。百人同屏、万人同服，指挥体系、补给线与地形全部真实模拟。</p>
+
         </div>
+
         <div class="f-card reveal" style="transition-delay:.2s">
+
           <div class="f-num">03</div>
+
           <div class="f-icon">🌍</div>
+
           <h3>动态沙盘世界</h3>
+
           <p>大陆版图随战局实时改变。你占领的每一座城池，都会永久留在这个世界的史书上。</p>
+
         </div>
+
         <div class="f-card reveal" style="transition-delay:.3s">
+
           <div class="f-num">04</div>
+
           <div class="f-icon">⚖️</div>
+
           <h3>无 VIP 公平竞技</h3>
+
           <p>没有属性付费，没有数值碾压。胜负只取决于你的操作、策略与军团之间的默契。</p>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- ============ 启动器下载（融合独立启动器页） ============ -->
+
   <section id="launcher" class="lc-sec">
+
     <div class="wrap">
+
       <div class="sec-head reveal">
+
         <div class="sec-tag">LAUNCHER</div>
+
         <h2 class="sec-title">下载启动器 · 一键进入战场</h2>
+
         <p class="sec-desc">下载完成后运行启动器：自动完成环境安全检测，并从官方服务器下载游戏本体，全程无需手动操作。</p>
+
         <p class="lc-flow"><b>下载启动器</b><span>→</span><b>安全检测</b><span>→</span><b>启动器内下载游戏</b><span>→</span><b>独立窗口开始游戏</b></p>
+
       </div>
+
+
 
       <div class="lc-dl-card reveal">
+
         <div class="lc-dl-head">
+
           <div class="lc-dl-icon">
+
             <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#e8c877" stroke-width="1.6"/><path d="M8 12l4 4 4-4" stroke="#e8c877" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v8" stroke="#e8c877" stroke-width="1.6" stroke-linecap="round"/></svg>
+
           </div>
+
           <div>
+
             <div class="t">终神之战：军团启动器</div>
+
             <div class="m">Windows 独立启动器 · 内嵌安全检查 · 自动下载游戏</div>
+
           </div>
+
         </div>
+
         <div class="lc-dl-meta">
+
           <span>大小<b id="lcSize">—</b></span>
-          <span>版本<b>v2.2</b></span>
+
+          <span>版本<b>v2.7</b></span>
+
           <span>校验<b id="lcSha">SHA-256</b></span>
+
         </div>
+
         <button type="button" class="lc-dl-btn" id="lcDlBtn"><span>立即下载启动器</span></button>
+
         <a class="lc-dl-btn lc-dl-btn-apk" id="lcApkBtn" href="https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/apk/zhongshen_legion.apk"><span>安卓版下载（APK）</span></a>
+
         <p class="lc-dl-note">下载后请通过启动器内的下载流程获取游戏本体。更新游戏无需重新下载启动器，启动器会自动拉取最新游戏文件。安卓版打开后同样自动检测并更新游戏。</p>
+
       </div>
+
+
 
       <div class="tsr-badge reveal">
+
         <span class="tsr-tag">自研</span>
+
         <b>TSR</b> 安全系统 · 启动器内嵌环境检测引擎，五项检测 + SHA-256 完整性校验
+
       </div>
+
+
 
       <div class="lc-safe-strip reveal">
+
         <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>系统 / 硬件 / 磁盘 / 防护 / 下载源 五项检测</span>
+
         <span><svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4v6c0 5-4 8-8 10-4-2-8-5-8-10Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>游戏文件 SHA-256 完整性校验</span>
+
         <span><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9h17M3.5 15h17M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z" stroke="currentColor" stroke-width="1.6"/></svg>官方源下载 · 独立窗口运行</span>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <section class="lc-sec" id="lcSteps">
+
     <div class="wrap">
+
       <div class="sec-head reveal">
+
         <div class="sec-tag">HOW TO PLAY</div>
+
         <h2 class="sec-title">三步进入 <em>终神之战</em></h2>
+
         <p class="sec-desc">从下载启动器到开始游戏，全程约 1 分钟</p>
+
       </div>
+
       <div class="lc-steps">
+
         <div class="lc-step reveal">
+
           <div class="n">01</div>
+
           <h3>下载启动器</h3>
+
           <p>点击上方按钮下载「终神之战：军团启动器」（仅 12.5 KB），下载即完成安装。</p>
+
           <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M8 12l4 4 4-4" stroke="#e8c877" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 4v12" stroke="#e8c877" stroke-width="1.4" stroke-linecap="round"/><path d="M4 20h16" stroke="#e8c877" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+
         </div>
+
         <div class="lc-step reveal" style="transition-delay:.12s">
+
           <div class="n">02</div>
+
           <h3>运行安全检测</h3>
+
           <p>双击启动器，自动弹出安全检测窗口，完成系统、硬件、磁盘、防护与下载源五项检测。</p>
+
           <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6Z" stroke="#e8c877" stroke-width="1.4"/></svg></div>
+
         </div>
+
         <div class="lc-step reveal" style="transition-delay:.24s">
+
           <div class="n">03</div>
+
           <h3>下载游戏 · 开始游戏</h3>
+
           <p>检测通过后，启动器自动从官方服务器下载游戏本体并校验完整性，随后在独立窗口进入游戏。</p>
+
           <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4v6c0 5-4 8-8 10-4-2-8-5-8-10Z" stroke="#e8c877" stroke-width="1.4"/></svg></div>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <section class="lc-sec" id="lcInfo">
+
     <div class="wrap">
+
       <div class="sec-head reveal">
+
         <div class="sec-tag">REQUIREMENTS</div>
+
         <h2 class="sec-title">运行要求与 <em>安全机制</em></h2>
+
       </div>
+
       <div class="lc-grid2">
+
         <div class="lc-panel reveal">
+
           <h3><span class="g"></span>运行要求</h3>
+
           <ul>
+
             <li>操作系统：Windows 10 / 11（64 位）</li>
+
             <li>浏览器引擎：Microsoft Edge（系统自带）</li>
+
             <li>可用磁盘空间：至少 64 MB</li>
+
             <li>网络：可访问官方下载源（约 26 KB 游戏包）</li>
+
           </ul>
+
         </div>
+
         <div class="lc-panel reveal" style="transition-delay:.12s">
+
           <h3><span class="g"></span>安全机制</h3>
+
           <ul>
+
             <li>启动前完成系统环境 / 硬件资源 / 磁盘空间检测</li>
+
             <li>安全防护状态检测（Windows Defender 等）</li>
+
             <li>下载源可用性检测，失败即终止</li>
+
             <li>游戏文件 SHA-256 完整性校验，防篡改防中断</li>
+
           </ul>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <section class="lc-sec" id="lcFaq">
+
     <div class="wrap">
+
       <div class="sec-head reveal">
+
         <div class="sec-tag">FAQ</div>
+
         <h2 class="sec-title">常见 <em>问题</em></h2>
+
       </div>
+
       <div class="lc-faq">
+
         <details class="reveal">
+
           <summary>下载时浏览器提示「此文件可能有害」？</summary>
+
           <p>这是 Windows 对未签名程序的常规提示。本启动器由官方发布，请选择「保留 / 仍要下载」，可放心运行。</p>
+
         </details>
+
         <details class="reveal">
+
           <summary>运行启动器时弹出安全警告？</summary>
+
           <p>首次运行未签名 exe 时，系统可能弹出 SmartScreen 提示，点击「更多信息 → 仍要运行」即可。启动器仅做系统检测并下载官方游戏文件。</p>
+
         </details>
+
         <details class="reveal">
+
           <summary>检测未通过或下载失败怎么办？</summary>
+
           <p>请检查磁盘剩余空间（需 64 MB 以上）、网络连接，并确认杀毒软件未拦截。重启启动器会重新检测与下载。</p>
+
         </details>
+
         <details class="reveal">
+
           <summary>游戏更新后需要重新下载启动器吗？</summary>
+
           <p>不需要。启动器每次运行都会从官方服务器拉取最新游戏文件并校验，游戏本体可独立更新。</p>
+
         </details>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- ============ 预约表单 ============ -->
+
   <section id="reserve">
+
     <div class="wrap">
+
       <div class="reserve-card reveal">
+
         <div class="rc-left">
+
           <h2>锁定你的内测席位</h2>
+
           <p>留下手机号，2027 年 2 月 3 日内测开启的第一时间，我们会把入场券送到你手上。</p>
+
           <ul class="perks">
+
             <li>预约即得「星辉招募令 ×10」</li>
+
             <li>自动参与首发内测资格抽取</li>
+
             <li>内测充值公测双倍返还</li>
+
             <li>专属预约头像框 &amp; 称号</li>
+
           </ul>
+
         </div>
+
+
 
         <div class="rc-right">
+
           <form id="reserveForm" novalidate>
+
             <label class="field-label" for="phone">手机号码</label>
+
             <div class="phone-field" id="phoneField">
+
               <input type="tel" id="phone" placeholder="请输入 11 位手机号"
+
                      maxlength="11" inputmode="numeric" autocomplete="off">
+
               <span class="phone-icon" id="phoneIcon"></span>
+
             </div>
+
             <p class="phone-msg" id="phoneMsg"></p>
+
             <button type="submit" class="btn btn-primary btn-block">立即预约</button>
+
             <p class="form-tip">提交即代表同意
+
               <button type="button" data-modal="terms"
+
                       style="background:none;border:none;padding:0;font:inherit;color:#8b91a7;text-decoration:underline;text-underline-offset:2px;cursor:pointer">《用户协议》</button>
+
               与
+
               <button type="button" data-modal="privacy"
+
                       style="background:none;border:none;padding:0;font:inherit;color:#8b91a7;text-decoration:underline;text-underline-offset:2px;cursor:pointer">《隐私政策》</button>
+
             </p>
+
           </form>
 
+
+
           <div class="success" id="success">
+
             <div class="tick">✓</div>
+
             <h3>你已完成预约</h3>
+
             <p>你已加入「终神之战：军团」先锋名单<br>内测开启前将以短信通知你</p>
+
             <div class="seat">席位编号 <b id="seatNo">#000000</b></div>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
 
+
+
   <!-- ============ 页脚 ============ -->
+
   <footer>
+
     <div class="f-logo">终神之战：军团</div>
+
     <div class="links">
+
       <button type="button" data-modal="terms">用户协议</button>
+
       <button type="button" data-modal="privacy">隐私政策</button>
+
       <button type="button" data-modal="minor">未成年人保护</button>
+
       <button type="button" data-modal="contact">联系我们</button>
+
     </div>
+
     <p>© 2026 终神之战：军团 项目组<br>健康游戏忠告：抵制不良游戏，拒绝盗版游戏。</p>
+
   </footer>
 
+
+
 </div>
+
+
 
 <!-- ==================== 公告悬浮窗 ==================== -->
+
 <button type="button" class="notice-fab has-unread" id="noticeFab" aria-label="查看公告">
+
   <svg viewBox="0 0 24 24">
+
     <path d="M3 10v4a1 1 0 0 0 1 1h3l4 4V5L7 9H4a1 1 0 0 0-1 1z"/>
+
     <path d="M16 8.5a4 4 0 0 1 0 7"/>
+
     <path d="M18.5 5.5a8 8 0 0 1 0 13"/>
+
   </svg>
+
   <span class="notice-dot" id="noticeDot"></span>
+
 </button>
 
+
+
 <div class="notice-panel" id="noticePanel" role="dialog" aria-label="游戏公告">
+
   <div class="notice-head">
+
     <h4>游戏公告</h4>
+
     <button type="button" class="notice-close" id="noticeClose" aria-label="关闭公告">✕</button>
+
   </div>
+
   <div class="notice-body" id="noticeBody"></div>
+
 </div>
+
+
 
 <!-- ==================== 抽奖弹窗 ==================== -->
+
 <div class="modal lottery-modal" id="lotteryModal" role="dialog" aria-modal="true" aria-label="抽取内测资格">
+
   <div class="modal-card">
+
     <div class="modal-head">
+
       <h3>内测资格抽取</h3>
+
       <button type="button" class="modal-close" id="lotteryClose" aria-label="关闭">✕</button>
+
     </div>
+
     <div class="lottery-body">
+
       <div class="lottery-success">
+
         <div class="tick">✓</div>
+
         <h4>你已完成预约</h4>
+
         <p>席位编号 <b id="lotterySeat">#000000</b></p>
+
       </div>
+
+
 
       <div class="lottery-stage" id="lotteryStage">
+
         <div class="draw-num" id="drawNum">0000</div>
+
         <div class="draw-text">正在抽取内测资格…</div>
+
       </div>
+
+
 
       <div id="lotteryResult" hidden></div>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <!-- ==================== 弹窗：内测版下载 ==================== -->
+
 <div class="modal download-modal" id="downloadModal" role="dialog" aria-modal="true" aria-labelledby="download-title">
+
   <div class="modal-card">
+
     <div class="modal-head">
+
       <h3 id="download-title">内测版下载</h3>
+
       <button type="button" class="modal-close" id="downloadClose" aria-label="关闭">✕</button>
+
     </div>
+
     <div class="download-body">
+
       <div class="download-icon">💻</div>
+
       <h3>预约成功！是否下载内测版？</h3>
+
       <p>《终神之战：军团》内测启动器现已开放下载<br>
+
          文件大小约 <b id="apkSize">—</b>，请确认网络与存储空间</p>
+
       <div class="download-actions">
+
         <button type="button" class="btn-download" id="downloadYes">
+
           <span>立即下载内测版</span><span class="arr">⬇</span>
+
         </button>
+
         <button type="button" class="btn-skip" id="downloadNo">暂不下载</button>
+
       </div>
+
       <p class="download-note" id="apkSizeNote">选择暂不下载，不影响你的预约与内测资格</p>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <!-- ==================== 弹窗：启动器下载（融合独立启动器页） ==================== -->
+
 <div class="modal launcher-modal" id="launcherModal" role="dialog" aria-modal="true" aria-labelledby="launcher-title">
+
   <div class="modal-card">
+
     <div class="modal-head">
+
       <h3 id="launcher-title">启动器下载</h3>
+
       <button type="button" class="modal-close" id="launcherClose" aria-label="关闭">✕</button>
+
     </div>
+
     <div class="launcher-body">
+
       <div class="launcher-icon">
+
         <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#e8c877" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+
           <path d="M12 2 4 5.2v5.6c0 4.6 3.3 8.4 8 9.7 4.7-1.3 8-5.1 8-9.7V5.2Z"/>
+
           <path d="M12 8v6M9.3 11.3 12 14l2.7-2.7"/>
+
         </svg>
+
       </div>
+
       <h3>下载启动器 · 一键进入战场</h3>
+
       <div class="launcher-flow">
+
         <b>下载启动器</b><span class="sep">→</span>
+
         <b>安全检测</b><span class="sep">→</span>
+
         <b>启动器内下载游戏</b><span class="sep">→</span>
+
         <b>独立窗口开始游戏</b>
+
       </div>
+
       <div class="launcher-meta">
+
         <div class="row"><span>文件</span><b id="launcherName">终神之战：军团启动器.exe</b></div>
+
         <div class="row"><span>大小</span><b id="launcherSize">—</b></div>
-        <div class="row"><span>版本</span><b>v2.1</b></div>
+
+        <div class="row"><span>版本</span><b>v2.7</b></div>
+
         <div class="row"><span>SHA-256</span><code id="launcherSha">…</code></div>
+
       </div>
+
       <div class="launcher-actions">
+
         <button type="button" class="btn-download" id="launcherDlYes">
+
           <span>立即下载启动器</span><span class="arr">⬇</span>
+
         </button>
+
       </div>
+
       <p class="launcher-note">浏览器可能提示"该文件可能有害"，请选择<b>「保留」</b>后运行；启动器会自动完成环境安全检测并下载游戏本体。</p>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <!-- ==================== 弹窗：用户协议 ==================== -->
+
 <div class="modal" id="modal-terms" role="dialog" aria-modal="true" aria-labelledby="terms-title">
+
   <div class="modal-card">
+
     <div class="modal-head">
+
       <h3 id="terms-title">用户协议</h3>
+
       <button type="button" class="modal-close" data-close aria-label="关闭">✕</button>
+
     </div>
+
     <div class="modal-body">
+
       <p>欢迎使用《终神之战：军团》（以下简称"本游戏"）。本协议是您与本游戏运营团队之间关于使用本游戏及相关服务所订立的协议。请您在预约、下载或使用本游戏前，仔细阅读本协议全部内容。</p>
 
+
+
       <h4>一、协议的接受与变更</h4>
+
       <p>您通过预约、下载、安装、启动或以其他方式使用本游戏，即视为您已阅读、理解并同意接受本协议的全部条款。运营团队有权根据法律法规变化及运营需要不定期修订本协议，修订后的协议将在游戏内或官方页面公布，公布后即生效。</p>
 
+
+
       <h4>二、账号与预约信息</h4>
+
       <ul>
+
         <li>您在预约时提供的手机号码应当真实、准确、合法、有效，并为您本人所有或已获得合法授权。</li>
+
         <li>预约手机号将用于内测资格通知、公测开启提醒及相关服务通知。</li>
+
         <li>您应妥善保管账号及密码，因保管不善造成的损失由您自行承担。</li>
+
         <li>账号所有权归运营团队所有，您仅获得账号的使用权。</li>
+
       </ul>
+
+
 
       <h4>三、虚拟物品与付费</h4>
+
       <ul>
+
         <li>游戏内的虚拟货币、道具、外观、英雄等均为本游戏服务的一部分，您仅在其有效期内享有使用权。</li>
+
         <li>预约奖励与内测充值返还将按照活动页面公示的规则发放，请留意相关说明。</li>
+
         <li>未成年人进行付费行为，须事先取得其法定监护人的同意。</li>
+
       </ul>
+
+
 
       <h4>四、用户行为规范</h4>
+
       <p>您承诺在使用本游戏过程中遵守中华人民共和国相关法律法规，不得从事下列行为：</p>
+
       <ul>
+
         <li>使用外挂、加速器、脚本或其他作弊工具；</li>
+
         <li>利用漏洞、Bug 获取不当利益；</li>
+
         <li>发布违法、色情、暴力、辱骂、歧视或其他不良信息；</li>
+
         <li>侵犯他人知识产权、隐私权或其他合法权益；</li>
+
         <li>以任何方式干扰游戏的正常运行或攻击服务器。</li>
+
       </ul>
+
+
 
       <h4>五、服务的中断与终止</h4>
+
       <p>因系统维护、升级、故障或不可抗力导致服务中断的，运营团队将尽力及时恢复。若您严重违反本协议，运营团队有权视情节采取警告、限制功能、封禁账号等措施。</p>
 
+
+
       <h4>六、免责声明</h4>
+
       <p>本游戏为虚拟娱乐产品，运营团队不对因您个人操作不当、设备故障、网络异常等非运营团队原因造成的损失承担责任。在法律允许的最大范围内，运营团队对本游戏所承担的赔偿责任以您实际支付的费用为限。</p>
 
+
+
       <h4>七、法律适用与争议解决</h4>
+
       <p>本协议适用中华人民共和国法律。因本协议产生的争议，双方应友好协商解决；协商不成的，任何一方可向运营团队所在地有管辖权的人民法院提起诉讼。</p>
 
+
+
       <div class="meta">版本号：V1.0 &nbsp;·&nbsp; 生效日期：2026 年 9 月 13 日 &nbsp;·&nbsp; 更新日期：2026 年 9 月 13 日</div>
+
     </div>
+
     <div class="modal-foot">
+
       <button type="button" class="modal-ok" data-close>我已知晓</button>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <!-- ==================== 弹窗：隐私政策 ==================== -->
+
 <div class="modal" id="modal-privacy" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+
   <div class="modal-card">
+
     <div class="modal-head">
+
       <h3 id="privacy-title">隐私政策</h3>
+
       <button type="button" class="modal-close" data-close aria-label="关闭">✕</button>
+
     </div>
+
     <div class="modal-body">
+
       <p>本游戏运营团队（以下简称"我们"）非常重视您的个人信息与隐私保护。本政策将说明我们如何收集、使用、存储、共享和保护您的个人信息，以及您所享有的权利。</p>
 
+
+
       <h4>一、我们收集的信息</h4>
+
       <ul>
+
         <li><strong>预约信息：</strong>您主动填写的手机号码，用于预约登记与开服通知。</li>
+
         <li><strong>设备信息：</strong>设备型号、操作系统版本、设备标识符、屏幕分辨率等，用于适配与安全风控。</li>
+
         <li><strong>日志信息：</strong>登录时间、游戏内操作记录、崩溃日志等，用于故障排查与服务优化。</li>
+
         <li><strong>网络信息：</strong>IP 地址、网络类型，用于区域判定与反作弊。</li>
+
       </ul>
+
+
 
       <h4>二、我们如何使用信息</h4>
+
       <ul>
+
         <li>完成预约登记，并在内测或公测开启时向您发送通知；</li>
+
         <li>提供、维护与改进游戏服务，优化游戏体验；</li>
+
         <li>进行实名认证与防沉迷管理，履行法定义务；</li>
+
         <li>识别并防范作弊、外挂、盗号等安全风险；</li>
+
         <li>在取得您同意的前提下，向您推送活动与版本资讯。</li>
+
       </ul>
+
+
 
       <h4>三、信息的存储</h4>
+
       <p>您的个人信息将存储于中华人民共和国境内的服务器。我们仅在实现本政策所述目的所必需的期限内保留您的信息，法律法规另有规定的除外。超出保留期限后，我们将对信息进行删除或匿名化处理。</p>
 
+
+
       <h4>四、信息的共享</h4>
+
       <p>我们不会向任何第三方出售您的个人信息。在下列情形下，我们可能有限度地共享必要信息：</p>
+
       <ul>
+
         <li>获得您的明确同意；</li>
+
         <li>为提供短信通知服务，与通信服务商共享手机号码；</li>
+
         <li>根据法律法规、司法机关或行政机关的强制性要求；</li>
+
         <li>为维护公共利益或您本人重大合法权益所必需。</li>
+
       </ul>
+
+
 
       <h4>五、您的权利</h4>
+
       <ul>
+
         <li><strong>查询与更正：</strong>您有权查询、更正您的预约信息。</li>
+
         <li><strong>删除：</strong>您有权要求删除您的个人信息，但法律法规另有规定的除外。</li>
+
         <li><strong>撤回同意：</strong>您有权随时撤回此前作出的授权同意。</li>
+
         <li><strong>注销：</strong>您有权申请注销账号，注销后我们将删除或匿名化相关个人信息。</li>
+
       </ul>
+
       <p>如需行使上述权利，可通过页面底部的"联系我们"与我们取得联系。</p>
 
+
+
       <h4>六、信息安全</h4>
+
       <p>我们采用加密传输、访问控制、安全审计等技术与管理措施保护您的个人信息，防止信息遭到未经授权的访问、披露、篡改或丢失。</p>
 
+
+
       <h4>七、未成年人信息保护</h4>
+
       <p>若您是未满 14 周岁的儿童，请在您的父母或其他监护人指导下阅读本政策，并在取得监护人同意后使用我们的服务。我们不会在未取得监护人同意的情况下收集儿童个人信息。</p>
 
+
+
       <h4>八、政策更新</h4>
+
       <p>本政策可能适时更新。更新后的政策将在本页面公布，重大变更我们还会通过游戏内公告或短信等方式另行告知。</p>
 
+
+
       <div class="meta">版本号：V1.0 &nbsp;·&nbsp; 生效日期：2026 年 9 月 13 日 &nbsp;·&nbsp; 更新日期：2026 年 9 月 13 日</div>
+
     </div>
+
     <div class="modal-foot">
+
       <button type="button" class="modal-ok" data-close>我已知晓</button>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <!-- ==================== 弹窗：未成年人保护 ==================== -->
+
 <div class="modal" id="modal-minor" role="dialog" aria-modal="true" aria-labelledby="minor-title">
+
   <div class="modal-card">
+
     <div class="modal-head">
+
       <h3 id="minor-title">未成年人保护</h3>
+
       <button type="button" class="modal-close" data-close aria-label="关闭">✕</button>
+
     </div>
+
     <div class="modal-body">
+
       <p>我们高度重视未成年人的身心健康与合法权益，严格落实国家有关法律法规及主管部门要求，为未成年人营造健康、绿色的游戏环境。</p>
 
+
+
       <h4>一、实名认证</h4>
+
       <p>所有用户均须完成实名认证后方可进入游戏。未完成实名认证的账号将无法登录或受到功能限制。我们依据国家新闻出版署《关于防止未成年人沉迷网络游戏工作的通知》等相关规定执行。</p>
 
+
+
       <h4>二、游戏时长限制</h4>
+
       <ul>
+
         <li>未满 18 周岁的用户，仅可在<strong>周五、周六、周日及法定节假日每日 20:00 至 21:00</strong>登录游戏，其余时间无法登录。</li>
+
         <li>每日 22:00 至次日 08:00 为未成年人强制下线时段。</li>
+
         <li>法定节假日以国务院办公厅公布的放假安排为准。</li>
+
       </ul>
+
+
 
       <h4>三、充值消费限制</h4>
+
       <ul>
+
         <li>未满 8 周岁的用户，不得进行任何游戏付费充值。</li>
+
         <li>8 周岁至未满 16 周岁的用户，单次充值不得超过 50 元，每月累计不得超过 200 元。</li>
+
         <li>16 周岁至未满 18 周岁的用户，单次充值不得超过 100 元，每月累计不得超过 400 元。</li>
+
         <li>若发现未成年人未经监护人同意进行充值，监护人可依据相关流程申请退款。</li>
+
       </ul>
+
+
 
       <h4>四、家长监护</h4>
+
       <p>我们提供家长监护相关服务，监护人可通过"联系我们"申请以下功能：</p>
+
       <ul>
+
         <li>查询未成年子女的账号信息与消费记录；</li>
+
         <li>限制或禁止未成年子女的账号登录与充值；</li>
+
         <li>对异常消费进行申诉与退款处理。</li>
+
       </ul>
 
+
+
       <h4>五、内容与社交管理</h4>
+
       <p>游戏内容经过严格审核，不含危害未成年人身心健康的信息。我们建议监护人关注未成年人的游戏行为与社交互动，引导其合理安排学习与娱乐时间。</p>
 
+
+
       <h4>六、健康游戏忠告</h4>
+
       <p>抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。</p>
 
+
+
       <div class="meta">版本号：V1.0 &nbsp;·&nbsp; 生效日期：2026 年 9 月 13 日 &nbsp;·&nbsp; 更新日期：2026 年 9 月 13 日</div>
+
     </div>
+
     <div class="modal-foot">
+
       <button type="button" class="modal-ok" data-close>我已知晓</button>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <!-- ==================== 弹窗：联系我们 ==================== -->
+
 <div class="modal" id="modal-contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+
   <div class="modal-card">
+
     <div class="modal-head">
+
       <h3 id="contact-title">联系我们</h3>
+
       <button type="button" class="modal-close" data-close aria-label="关闭">✕</button>
+
     </div>
+
     <div class="modal-body">
+
       <p>如果您在预约、测试或游戏过程中遇到任何问题，欢迎通过以下方式与我们取得联系。我们将尽快为您处理。</p>
 
+
+
       <h4>客服邮箱</h4>
+
       <p><a href="mailto:support@zhongshen-legion.com">support@zhongshen-legion.com</a><br>
+
       工作时间：每日 09:00 – 22:00（法定节假日照常）</p>
 
+
+
       <h4>客服热线</h4>
+
       <p>400-000-2027<br>工作时间：每日 09:00 – 21:00</p>
 
+
+
       <h4>官方 QQ 群</h4>
+
       <p>军团集结号：20270203<br>（内测资格、版本资讯、活动福利优先发布）</p>
 
+
+
       <h4>官方社区</h4>
+
       <p>微博 / 哔哩哔哩 / TapTap 搜索「终神之战：军团」<br>
+
       关注官方账号，第一时间获取开发进度与测试消息。</p>
 
+
+
       <h4>运营主体</h4>
+
       <p>终神之战：军团 项目组<br>
+
       地址：中国 · 某市某区某路 2027 号<br>
+
       邮编：100000</p>
 
+
+
       <h4>家长监护专线</h4>
+
       <p>若您为未成年人的法定监护人，可通过上述客服邮箱申请家长监护服务，邮件主题请注明「家长监护申请」。</p>
 
+
+
       <div class="meta">本页面信息仅供参考，如遇调整请以游戏内公告为准。</div>
+
     </div>
+
     <div class="modal-foot">
+
       <button type="button" class="modal-ok" data-close>关闭</button>
+
     </div>
+
   </div>
+
 </div>
 
+
+
 <script>
+
 /* ============================================================
+
    ★★★ 公告内容配置区 ★★★
+
    以后新增/修改公告，只需编辑下面这个数组即可。
+
    最新的公告请放在数组最前面（会自动显示 NEW 标记）。
+
    ============================================================ */
+
 const ANNOUNCEMENTS = [
+
   {
+
     tag: '活动',
+
     date: '2026-09-13',
+
     title: '预约即可抽取内测资格',
+
     content: '完成手机号预约后，每位玩家均可获得一次内测资格抽取机会，中奖率为 10%，中奖玩家将获得专属内测激活码。'
+
   },
+
   {
+
     tag: '公告',
+
     date: '2026-09-10',
+
     title: '内测时间确定为 2027 年 2 月 3 日',
+
     content: '《终神之战：军团》首次删档内测将于 2027 年 2 月 3 日 10:00 正式开启，届时将以短信形式通知获得资格的玩家。'
+
   },
+
   {
+
     tag: '说明',
+
     date: '2026-09-05',
+
     title: '关于预约奖励发放',
+
     content: '所有预约奖励将在公测开启后 7 个工作日内发放至游戏内邮箱，请保持手机号畅通以便接收通知。'
+
   }
+
 ];
+
 /* ============================================================ */
 
+
+
 /* ================= 星空背景 ================= */
+
 (function () {
+
   const canvas = document.getElementById('stars');
+
   const ctx = canvas.getContext('2d');
+
   let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+
   let stars = [], meteors = [];
 
+
+
   function resize() {
+
     W = canvas.width = innerWidth * dpr;
+
     H = canvas.height = innerHeight * dpr;
+
     canvas.style.width = innerWidth + 'px';
+
     canvas.style.height = innerHeight + 'px';
+
     build();
+
   }
+
+
 
   function build() {
+
     const count = Math.min(220, Math.floor(innerWidth * innerHeight / 9000));
+
     stars = [];
+
     for (let i = 0; i < count; i++) {
+
       stars.push({
+
         x: Math.random() * W,
+
         y: Math.random() * H,
+
         r: (Math.random() * 1.3 + 0.3) * dpr,
+
         a: Math.random() * 0.6 + 0.15,
+
         sp: Math.random() * 0.018 + 0.004,
+
         ph: Math.random() * Math.PI * 2,
+
         gold: Math.random() > 0.72
+
       });
+
     }
+
   }
+
+
 
   function spawnMeteor() {
+
     if (Math.random() > 0.985) {
+
       meteors.push({
+
         x: Math.random() * W * 0.8,
+
         y: -40,
+
         len: (Math.random() * 130 + 90) * dpr,
+
         sp: (Math.random() * 5 + 5) * dpr,
+
         a: 1
+
       });
+
     }
+
   }
+
+
 
   let t = 0;
+
   function loop() {
+
     t += 0.016;
+
     ctx.clearRect(0, 0, W, H);
 
+
+
     for (const s of stars) {
+
       const tw = 0.55 + Math.sin(t * 2.2 + s.ph) * 0.45;
+
       ctx.beginPath();
+
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+
       ctx.fillStyle = s.gold
+
         ? `rgba(232,200,119,${s.a * tw})`
+
         : `rgba(200,214,255,${s.a * tw * 0.85})`;
+
       ctx.fill();
+
       s.y += s.sp * dpr;
+
       if (s.y > H) { s.y = -5; s.x = Math.random() * W; }
+
     }
+
+
 
     spawnMeteor();
+
     for (let i = meteors.length - 1; i >= 0; i--) {
+
       const m = meteors[i];
+
       const g = ctx.createLinearGradient(m.x, m.y, m.x - m.len * 0.7, m.y - m.len);
+
       g.addColorStop(0, `rgba(255,240,200,${m.a})`);
+
       g.addColorStop(1, 'rgba(255,240,200,0)');
+
       ctx.strokeStyle = g;
+
       ctx.lineWidth = 1.6 * dpr;
+
       ctx.beginPath();
+
       ctx.moveTo(m.x, m.y);
+
       ctx.lineTo(m.x - m.len * 0.7, m.y - m.len);
+
       ctx.stroke();
 
+
+
       m.x += m.sp;
+
       m.y += m.sp;
+
       m.a -= 0.008;
+
       if (m.a <= 0 || m.y > H + 200) meteors.splice(i, 1);
+
     }
 
+
+
     requestAnimationFrame(loop);
+
   }
 
+
+
   resize();
+
   addEventListener('resize', resize);
+
   loop();
+
 })();
 
+
+
 /* ================= 顶栏滚动态 ================= */
+
 const header = document.getElementById('header');
+
 addEventListener('scroll', () => {
+
   header.classList.toggle('scrolled', scrollY > 40);
+
 }, { passive: true });
 
+
+
 /* ================= 倒计时 ================= */
+
 const OPEN_TIME = new Date(2027, 1, 3, 10, 0, 0).getTime();
+
 const TARGET = OPEN_TIME;
 
+
+
 const cdD = document.getElementById('cdD');
+
 const cdH = document.getElementById('cdH');
+
 const cdM = document.getElementById('cdM');
+
 const cdS = document.getElementById('cdS');
+
+
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
+
+
 function tick() {
+
   let diff = Math.max(0, TARGET - Date.now());
+
   const d = Math.floor(diff / 86400000); diff %= 86400000;
+
   const h = Math.floor(diff / 3600000);  diff %= 3600000;
+
   const m = Math.floor(diff / 60000);    diff %= 60000;
+
   const s = Math.floor(diff / 1000);
+
   cdD.textContent = pad(d);
+
   cdH.textContent = pad(h);
+
   cdM.textContent = pad(m);
+
   cdS.textContent = pad(s);
+
 }
+
 tick();
+
 setInterval(tick, 1000);
 
+
+
 /* ================= 预约人数 ================= */
+
 let count = 192;
+
 const heroCount = document.getElementById('heroCount');
+
 const fmt = n => n.toLocaleString('en-US');
 
+
+
 function render() {
+
   heroCount.textContent = fmt(count);
+
 }
+
 window.addEventListener('load', render);
 
+
+
 setInterval(() => {
+
   count += 1;
+
   render();
+
 }, 2 * 60 * 60 * 1000);
 
+
+
 /* ================= 滚动出现动画 ================= */
+
 const io = new IntersectionObserver((entries) => {
+
   entries.forEach(e => {
+
     if (e.isIntersecting) {
+
       e.target.classList.add('in');
+
       io.unobserve(e.target);
+
     }
+
   });
+
 }, { threshold: 0.14 });
+
+
 
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+
 /* ================= Toast ================= */
+
 function toast(msg) {
+
   const el = document.createElement('div');
+
   el.className = 'toast';
+
   el.textContent = msg;
+
   document.body.appendChild(el);
+
   requestAnimationFrame(() => el.classList.add('show'));
+
   setTimeout(() => {
+
     el.classList.remove('show');
+
     setTimeout(() => el.remove(), 420);
+
   }, 2400);
+
 }
 
+
+
 /* ================= 公告悬浮窗 ================= */
+
 (function () {
+
   const fab   = document.getElementById('noticeFab');
+
   const panel = document.getElementById('noticePanel');
+
   const dot   = document.getElementById('noticeDot');
+
   const body  = document.getElementById('noticeBody');
+
   const close = document.getElementById('noticeClose');
 
+
+
   function renderNotices() {
+
     if (!ANNOUNCEMENTS.length) {
+
       body.innerHTML = '<p class="notice-empty">暂无公告</p>';
+
       return;
+
     }
+
     body.innerHTML = ANNOUNCEMENTS.map((n, i) => `
+
       <article class="notice-item">
+
         <div class="notice-item-head">
+
           <span class="notice-tag">${n.tag || '公告'}</span>
+
           <span class="notice-date">${n.date || ''}</span>
+
           ${i === 0 ? '<span class="notice-new">NEW</span>' : ''}
+
         </div>
+
         <h5>${n.title || ''}</h5>
+
         <p>${n.content || ''}</p>
+
       </article>
+
     `).join('');
+
   }
+
   renderNotices();
 
+
+
   function openPanel() {
+
     panel.classList.add('open');
+
     dot.hidden = true;
+
     fab.classList.remove('has-unread');
+
     body.scrollTop = 0;
+
   }
+
   function closePanel() {
+
     panel.classList.remove('open');
+
   }
+
+
 
   fab.addEventListener('click', () => {
+
     panel.classList.contains('open') ? closePanel() : openPanel();
+
   });
+
   close.addEventListener('click', closePanel);
 
+
+
   document.addEventListener('click', (e) => {
+
     if (!panel.classList.contains('open')) return;
+
     if (panel.contains(e.target) || fab.contains(e.target)) return;
+
     closePanel();
+
   });
+
 })();
+
+
 
 /* ================= 弹窗系统（协议） ================= */
+
 (function () {
+
   const modals = {
+
     terms:   document.getElementById('modal-terms'),
+
     privacy: document.getElementById('modal-privacy'),
+
     minor:   document.getElementById('modal-minor'),
+
     contact: document.getElementById('modal-contact')
+
   };
 
+
+
   let openedModal = null;
+
   let lastFocused = null;
 
+
+
   function open(key) {
+
     const m = modals[key];
+
     if (!m) return;
+
     if (openedModal) close();
 
+
+
     lastFocused = document.activeElement;
+
     openedModal = m;
+
     m.classList.add('open');
+
     document.body.classList.add('modal-open');
 
+
+
     const body = m.querySelector('.modal-body');
+
     if (body) body.scrollTop = 0;
 
+
+
     setTimeout(() => {
+
       const btn = m.querySelector('.modal-close');
+
       if (btn) btn.focus();
+
     }, 60);
+
   }
+
+
 
   function close() {
+
     if (!openedModal) return;
+
     openedModal.classList.remove('open');
+
     document.body.classList.remove('modal-open');
+
     openedModal = null;
+
     if (lastFocused && lastFocused.focus) lastFocused.focus();
+
   }
 
+
+
   document.querySelectorAll('[data-modal]').forEach(btn => {
+
     btn.addEventListener('click', () => open(btn.dataset.modal));
+
   });
+
+
 
   document.querySelectorAll('.modal').forEach(m => {
+
     m.addEventListener('click', (e) => {
+
       if (e.target === m) close();
+
       if (e.target.hasAttribute('data-close')) close();
+
     });
+
   });
+
+
 
   document.addEventListener('keydown', (e) => {
+
     if (e.key === 'Escape') close();
+
   });
+
+
 
   document.addEventListener('focusin', (e) => {
+
     if (!openedModal) return;
+
     if (!openedModal.contains(e.target)) {
+
       const btn = openedModal.querySelector('.modal-close');
+
       if (btn) btn.focus();
+
     }
+
   });
+
 })();
 
+
+
 /* ================= 手机号校验 + 预约 + 抽奖 ================= */
+
 const form = document.getElementById('reserveForm');
+
 const phone = document.getElementById('phone');
+
 const phoneField = document.getElementById('phoneField');
+
 const phoneIcon = document.getElementById('phoneIcon');
+
 const phoneMsg = document.getElementById('phoneMsg');
+
 const success = document.getElementById('success');
+
 const seatNo = document.getElementById('seatNo');
 
+
+
 /* 抽奖弹窗元素 */
+
 const lotteryModal  = document.getElementById('lotteryModal');
+
 const lotterySeat   = document.getElementById('lotterySeat');
+
 const lotteryStage  = document.getElementById('lotteryStage');
+
 const lotteryResult = document.getElementById('lotteryResult');
+
 const drawNum       = document.getElementById('drawNum');
+
 const lotteryClose  = document.getElementById('lotteryClose');
 
+
+
 const PHONE_RE = /^1[3-9]\d{9}$/;
+
 const WIN_RATE = 0.1; // 中奖概率 10%
 
+
+
 /* 实时校验手机号 */
+
 function validatePhone(silent) {
+
   const v = phone.value.trim();
+
+
 
   phoneField.classList.remove('valid', 'invalid');
 
+
+
   if (v.length === 0) {
+
     phoneIcon.textContent = '';
+
     phoneMsg.textContent = '';
+
     phoneMsg.className = 'phone-msg';
+
     return false;
+
   }
+
+
 
   if (PHONE_RE.test(v)) {
+
     phoneField.classList.add('valid');
+
     phoneIcon.textContent = '✓';
+
     phoneMsg.textContent = '手机号格式正确';
+
     phoneMsg.className = 'phone-msg ok';
+
     return true;
+
   }
+
+
 
   if (v.length < 11) {
+
     phoneIcon.textContent = '';
+
     if (silent) {
+
       phoneMsg.textContent = '';
+
       phoneMsg.className = 'phone-msg';
+
     } else {
+
       phoneMsg.textContent = `还需输入 ${11 - v.length} 位数字`;
+
       phoneMsg.className = 'phone-msg';
+
     }
+
     return false;
+
   }
 
+
+
   phoneField.classList.add('invalid');
+
   phoneIcon.textContent = '✕';
+
   phoneMsg.textContent = '手机号格式不正确，请检查后重试';
+
   phoneMsg.className = 'phone-msg bad';
+
   return false;
+
 }
+
+
 
 phone.addEventListener('input', () => {
+
   phone.value = phone.value.replace(/\D/g, '');
+
   validatePhone(false);
+
 });
+
+
 
 phone.addEventListener('blur', () => {
+
   validatePhone(true);
+
 });
 
+
+
 /* 生成随机激活码 */
+
 function genCode() {
+
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
   const part = () => Array.from({ length: 4 },
+
     () => chars[Math.floor(Math.random() * chars.length)]).join('');
+
   return `${part()}-${part()}-${part()}`;
+
 }
 
+
+
 /* ============== 打开抽奖弹窗并自动抽奖 ============== */
+
 let lotteryRunning = false;
+
 let lotteryTimer = null;
 
+
+
 function openLotteryModal(seatText) {
+
   lotterySeat.textContent = seatText;
+
   lotteryResult.hidden = true;
+
   lotteryResult.innerHTML = '';
+
   lotteryStage.hidden = false;
+
   drawNum.textContent = '0000';
 
+
+
   lotteryModal.classList.add('open');
+
   document.body.classList.add('modal-open');
 
+
+
   lotteryRunning = true;
+
   lotteryTimer = setInterval(() => {
+
     drawNum.textContent = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+
   }, 55);
+
+
 
   const win = Math.random() < WIN_RATE;
 
+
+
   setTimeout(() => {
+
     if (!lotteryRunning) return;
+
     clearInterval(lotteryTimer);
+
     lotteryRunning = false;
+
     lotteryStage.hidden = true;
+
     lotteryResult.hidden = false;
 
+
+
     if (win) {
+
       const code = genCode();
+
       lotteryResult.innerHTML = `
+
         <div class="result-card win">
+
           <div class="result-icon">🎉</div>
+
           <h4>恭喜获得内测资格</h4>
+
           <p>你的内测激活码已生成，请妥善保存</p>
+
           <div class="code">${code}</div>
+
           <span class="again">内测开启前将以短信再次提醒你</span>
+
         </div>`;
+
       toast('恭喜！你抽中了内测资格');
+
     } else {
+
       lotteryResult.innerHTML = `
+
         <div class="result-card lose">
+
           <div class="result-icon">😢</div>
+
           <h4>很遗憾，本次未中奖</h4>
+
           <p>内测资格有限，感谢你的参与<br>公测开启时将第一时间通知你</p>
+
           <span class="again">预约成功仍然有效，奖励照常发放</span>
+
         </div>`;
+
       toast('本次未中奖，感谢参与');
+
     }
+
   }, 2600);
+
 }
+
+
 
 /* 关闭抽奖弹窗 */
+
 function closeLotteryModal() {
+
   lotteryModal.classList.remove('open');
+
   document.body.classList.remove('modal-open');
+
   if (lotteryRunning) {
+
     clearInterval(lotteryTimer);
+
     lotteryRunning = false;
+
   }
+
 }
+
+
 
 lotteryClose.addEventListener('click', closeLotteryModal);
+
 lotteryModal.addEventListener('click', (e) => {
+
   if (e.target === lotteryModal) closeLotteryModal();
+
 });
+
 document.addEventListener('keydown', (e) => {
+
   if (e.key === 'Escape' && lotteryModal.classList.contains('open')) {
+
     closeLotteryModal();
+
   }
+
 });
+
+
 
 /* ============== 内测版下载弹窗 ============== */
+
 /* ★ 游戏启动器已内嵌于页面（base64），运行启动器后将从服务器下载游戏本体 */
+
 const GAME_EXE_B64 = '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BAAAAAAAAAAAAAAAAQA4AAAAAAAEAAAAAAAAAAAAAABuAdgEAAAAAF8AfgEAAAAAADxNb2R1bGU+AGxhdW5jaGVyX3YyLmV4ZQBQcm9ncmFtAFpTWlpMYXVuY2hlcgBtc2NvcmxpYgBTeXN0ZW0AT2JqZWN0AEFQUF9USVRMRQBBUFBfVkVSU0lPTgBCQVNFX1BBR0VTAEJBU0VfQ0ROAEdBTUVfRklMRQBWRVJTSU9OX0ZJTEUAREFUQV9ESVIATE9DQUxfR0FNRQBMT0NBTF9WRVIATWFpbgBQYXVzZQBDaGVja09TAENoZWNrSFcAQ2hlY2tEaXNrAENoZWNrQVYAQ2hlY2tTb3VyY2UAVXBkYXRlQWxsAFN5c3RlbS5Db2xsZWN0aW9ucy5HZW5lcmljAERpY3Rpb25hcnlgMgBGZXRjaE1hbmlmZXN0AENvbXBhcmVWZXJzaW9uAFBhcnNlSW50AFVwZGF0ZUdhbWUAVXBkYXRlTGF1bmNoZXIAU3RhcnRHYW1lAEZpbmRFZGdlAEh0dHBHZXQAU2hhMjU2SGV4AC5jdG9yAGFyZ3MAYQBiAHMAZGljdAB1cmwAdGltZW91dE1zAGRhdGEAU3lzdGVtLlJ1bnRpbWUuQ29tcGlsZXJTZXJ2aWNlcwBDb21waWxhdGlvblJlbGF4YXRpb25zQXR0cmlidXRlAFJ1bnRpbWVDb21wYXRpYmlsaXR5QXR0cmlidXRlAGxhdW5jaGVyX3YyAFN5c3RlbS5UZXh0AEVuY29kaW5nAGdldF9VVEY4AENvbnNvbGUAc2V0X091dHB1dEVuY29kaW5nAHNldF9UaXRsZQBTdHJpbmcAb3BfRXF1YWxpdHkAV3JpdGVMaW5lAEV4Y2VwdGlvbgBnZXRfTWVzc2FnZQBDb25jYXQAV3JpdGUAUmVhZExpbmUAVHJpbQBUb0xvd2VySW52YXJpYW50AENvbnNvbGVLZXlJbmZvAFJlYWRLZXkATWljcm9zb2Z0LldpbjMyAFJlZ2lzdHJ5AFJlZ2lzdHJ5S2V5AExvY2FsTWFjaGluZQBPcGVuU3ViS2V5AEdldFZhbHVlAENvbnZlcnQAVG9TdHJpbmcAVG9JbnQzMgBJRGlzcG9zYWJsZQBEaXNwb3NlAEVudmlyb25tZW50AE9wZXJhdGluZ1N5c3RlbQBnZXRfT1NWZXJzaW9uAFZlcnNpb24AZ2V0X1ZlcnNpb24AZ2V0X01ham9yAElzTnVsbE9yRW1wdHkASW50MzIAZ2V0X1Byb2Nlc3NvckNvdW50AGdldF9TeXN0ZW1EaXJlY3RvcnkAU3lzdGVtLklPAFBhdGgAR2V0UGF0aFJvb3QARHJpdmVJbmZvAGdldF9BdmFpbGFibGVGcmVlU3BhY2UAZ2V0X05hbWUASW50NjQAU3lzdGVtLk1hbmFnZW1lbnQATWFuYWdlbWVudE9iamVjdFNlYXJjaGVyAE1hbmFnZW1lbnRPYmplY3RDb2xsZWN0aW9uAEdldABNYW5hZ2VtZW50T2JqZWN0RW51bWVyYXRvcgBHZXRFbnVtZXJhdG9yAE1hbmFnZW1lbnRCYXNlT2JqZWN0AGdldF9DdXJyZW50AGdldF9JdGVtAE1vdmVOZXh0AFVyaQBnZXRfSG9zdABHZXRTdHJpbmcAU3RyaW5nQ29tcGFyaXNvbgBJbmRleE9mAFN5c3RlbS5XZWIuRXh0ZW5zaW9ucwBTeXN0ZW0uV2ViLlNjcmlwdC5TZXJpYWxpemF0aW9uAEphdmFTY3JpcHRTZXJpYWxpemVyAERlc2VyaWFsaXplAENvbnRhaW5zS2V5AENoYXIAU3BsaXQATWF0aABNYXgAU3lzdGVtLlRleHQuUmVndWxhckV4cHJlc3Npb25zAFJlZ2V4AFJlcGxhY2UAVHJ5UGFyc2UARGlyZWN0b3J5AERpcmVjdG9yeUluZm8AQ3JlYXRlRGlyZWN0b3J5AEZpbGUARXhpc3RzAFJlYWRBbGxUZXh0AENvbXBhcmVPcmRpbmFsAGdldF9MZW5ndGgAU3Vic3RyaW5nAFdyaXRlQWxsQnl0ZXMAV3JpdGVBbGxUZXh0AENvbWJpbmUAU3lzdGVtLkRpYWdub3N0aWNzAFByb2Nlc3MAR2V0Q3VycmVudFByb2Nlc3MAUHJvY2Vzc01vZHVsZQBnZXRfTWFpbk1vZHVsZQBnZXRfRmlsZU5hbWUAZ2V0X0RlZmF1bHQAUHJvY2Vzc1N0YXJ0SW5mbwBzZXRfRmlsZU5hbWUAc2V0X0FyZ3VtZW50cwBzZXRfVXNlU2hlbGxFeGVjdXRlAFByb2Nlc3NXaW5kb3dTdHlsZQBzZXRfV2luZG93U3R5bGUAU3RhcnQARXhpdABnZXRfQWJzb2x1dGVVcmkAV2FpdEZvckV4aXQAU3BlY2lhbEZvbGRlcgBHZXRGb2xkZXJQYXRoAFN5c3RlbS5OZXQAV2ViUmVxdWVzdABDcmVhdGUASHR0cFdlYlJlcXVlc3QAc2V0X01ldGhvZABzZXRfVGltZW91dABzZXRfUmVhZFdyaXRlVGltZW91dABzZXRfVXNlckFnZW50AFNlcnZpY2VQb2ludE1hbmFnZXIAU2VjdXJpdHlQcm90b2NvbFR5cGUAc2V0X1NlY3VyaXR5UHJvdG9jb2wAc2V0X0NoZWNrQ2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdABXZWJSZXNwb25zZQBHZXRSZXNwb25zZQBIdHRwV2ViUmVzcG9uc2UAU3RyZWFtAEdldFJlc3BvbnNlU3RyZWFtAE1lbW9yeVN0cmVhbQBCeXRlAFJlYWQAVG9BcnJheQBTeXN0ZW0uU2VjdXJpdHkuQ3J5cHRvZ3JhcGh5AFNIQTI1NgBIYXNoQWxnb3JpdGhtAENvbXB1dGVIYXNoAFN0cmluZ0J1aWxkZXIAQXBwZW5kAC5jY3RvcgAAAAAXyH5eeUtOGGIa/5tR4lYgAC9UqFJoVgEZLQAtAGMAaABlAGMAawAtAG8AbgBsAHkAAV09AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AD0APQA9AAArIAAgAMh+XnlLThhiGv+bUeJWIAAvVKhSaFYgACAAdgAyAC4AMgAuADAAARMKAMBoS22MWxBiDP8AkPpRAjABKwoAr3ODWCpnGpDHj8BoS20M//eLCWMKTrll0GM6eQRZBnQOVM2R1YsCMAEZCgBbABmV74tdACAA9GawZTFZJY06ACAAARP3i8Bo5WdRf9x+DlTNkdWLAjABQThuD2LyXTFc6n4CMJOPZVEgAPRmsGUgAO9TjVEha8Bo5WdIcixn9GawZQz/9HalYwlj3lZmjy9UqFI4bg9iAjABBT4AIAAABfRmsGUBA3UAAAMxAAAxCgA4bg9i8l0AkPpRAjALTiFrL1SoUixnL1SoUmhWBlzqgahSwGjlZ3Ze9GawZQIwARUKAAlj+04PYS6VAJD6US4ALgAuAAEBAFlTAE8ARgBUAFcAQQBSAEUAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAIABOAFQAXABDAHUAcgByAGUAbgB0AFYAZQByAHMAaQBvAG4AAB1EAGkAcwBwAGwAYQB5AFYAZQByAHMAaQBvAG4AADNDAHUAcgByAGUAbgB0AE0AYQBqAG8AcgBWAGUAcgBzAGkAbwBuAE4AdQBtAGIAZQByAAALWwAxWSWNXQAgAAELWwAakMePXQAgAAEd+3zffq9zg1g6ACAAVwBpAG4AZABvAHcAcwAgAAEFLgB4AAAbbHj2TjoAIABDAFAAVQAgADuQkY84aMNfIAABEyAAOGgI/4GJQmwgAGUiMgAJ/wEJwXjYdjoAIAABCSAA71ModSAAARkgAE0AQgAI/4GJQmwgAGUiNQAwADAACf8BI1sAMVkljV0AIADBeNh2OgAgAOBl1Wz7i9ZTwXjYduFPb2ABKXIAbwBvAHQAXABTAGUAYwB1AHIAaQB0AHkAQwBlAG4AdABlAHIAMgAAa1MARQBMAEUAQwBUACAAZABpAHMAcABsAGEAeQBOAGEAbQBlACwAcAByAG8AZAB1AGMAdABTAHQAYQB0AGUAIABGAFIATwBNACAAQQBuAHQAaQBWAGkAcgB1AHMAUAByAG8AZAB1AGMAdAAAF2QAaQBzAHAAbABhAHkATgBhAG0AZQAAJVsAGpDHj10AIAAylqRiOgAgAPJdwGhLbTBSiVtoUW+P9k4gAAE5WwDQYzp5XQAgADKWpGI6ACAAKmfAaEttMFJAZ9Jrb4/2Tgz/94tueKSL+3zffjKWpGLyXQBfL1QBAy8AAB1bABqQx49dACAAC059j5BuOgAgAO9Tvo8gACgAAQMpAAAVWwDzjcePXQAgAAtOfY+QbjoAIAABCSAA1I/eVnp6AQkgAC0APgAgAAEzWwAxWSWNXQAgAAtOfY+QbjoAIADgZdVs3o+lYzhuD2INZ6FSaFYM//eLwGjlZ1F/3H4BESIAcwBoAGEAMgA1ADYAIgAAD3YAZQByAHMAaQBvAG4AAA1zAGgAYQAyADUANgAAN+Bl1Wy3g9ZTSHIsZwVuVVMI/2cAYQBtAGUAXwB2AGUAcgBzAGkAbwBuAC4AagBzAG8AbgAJ/wEDGv8BAzAAAA1bAF4AMAAtADkAXQABH1sA9GawZV0AIAA4bg9i8l0vZgBnsGVIcixnIAB2AAELDP/zjcePC059jwEdWwD0ZrBlXQAgANFTsHM4bg9isGVIcixnIAB2AAERDP8AX8tZC059jy4ALgAuAAEXIAAgACAAIAAgACAAIABlZ5BuOgAgAAENCP8haIyaGpDHjwn/AS8gAIVRuVshaIyaDU4mewj/QwBEAE4AIAATf1hb3m4OVAn/DP8dXNWLC04ATpBuATs4bg9ih2X2TgtOfY8xWSWNOgAgAEBiCWcLTn2PkG5HVypnGpDHjyAAUwBIAEEAMgA1ADYAIAAhaIyaAQMI/wEDCf8BO1MASABBADIANQA2ACAAIWiMmjFZJY0M/4dl9k7vU/2Aq4jhezllFmILTn2PDU6MW3RlCP8fZxtnIAABDy4ALgAuACAAnltFliAAAQkuAC4ALgAJ/wEzWwD0ZrBlXQAgADhuD2ILTn2PjFsQYgz/UwBIAEEAMgA1ADYAIAAhaIyaGpDHjyAAEycBIWwAYQB1AG4AYwBoAGUAcgBfAHYAZQByAHMAaQBvAG4AAB9sAGEAdQBuAGMAaABlAHIAXwBzAGgAYQAyADUANgAAG2wAYQB1AG4AYwBoAGUAcgBfAGYAaQBsAGUAADVbAPRmsGVdACAAL1SoUmhWSHIsZ8Bo5WfyXS9UKHUI/w1noVJoVipn0VMDXrBlSHIsZwn/AQsyAC4AMgAuADAAACtbAPRmsGVdACAAL1SoUmhW8l0vZgBnsGVIcixnIAB2ADIALgAyAC4AMAABH1sA9GawZV0AIADRU7BzL1SoUmhWsGVIcixnIAB2AAERDP9jayhXC059jy4ALgAuAAEfWwBmi0pUXQAgAC9UqFJoVvRmsGULTn2PMVkljQj/AQkqZ+V3GZXviwEZCf8M/yxnIWvnfu1+f08odVNfTVJIcixnAT1bAGaLSlRdACAAL1SoUmhW9GawZSAAUwBIAEEAMgA1ADYAIAAhaIyaMVkljQz/8l3WU4ht6oGoUvRmsGUBIWwAYQB1AG4AYwBoAGUAcgBfAG4AZQB3AC4AZQB4AGUAACd1AHAAZABhAHQAZQBfAGwAYQB1AG4AYwBoAGUAcgAuAGIAYQB0AABhQABlAGMAaABvACAAbwBmAGYADQAKAHQAaQBtAGUAbwB1AHQAIAAvAHQAIAAyACAALwBuAG8AYgByAGUAYQBrACAAPgBuAHUAbAANAAoAYwBvAHAAeQAgAC8AeQAgACIAAAciACAAIgAAISIAIAA+AG4AdQBsAA0ACgBkAGUAbAAgAC8AcQAgACIAABsiAA0ACgBzAHQAYQByAHQAIAAiACIAIAAiAAAlIgANAAoAZABlAGwAIAAvAHEAIAAiACUAfgBmADAAIgANAAoAAA9jAG0AZAAuAGUAeABlAAAJLwBjACAAIgAAAyIAAB1bAGaLSlRdACAA4GXVbC9UqFL0ZrBlGoEsZwj/AR8KAFsA9GawZV0AIAAvVKhSaFbyXfRmsGXzgSAAdgABEwz/BlzqgahSzZEvVC4ALgAuAAEbWwAZle+LXQAgACxnMFc4bg9ih2X2Tjp/MVkBL1sAGZXvi10AIAAqZ35iMFIgAE0AaQBjAHIAbwBzAG8AZgB0ACAARQBkAGcAZQABGWUAZABnAGUAXwBwAHIAbwBmAGkAbABlAAAjLQAtAHUAcwBlAHIALQBkAGEAdABhAC0AZABpAHIAPQAiAAETIgAgAC0ALQBhAHAAcAA9ACIAATEiACAALQAtAHcAaQBuAGQAbwB3AC0AcwBpAHoAZQA9ADEAMgA4ADAALAA3ADIAMAABIVsAL1SoUl0AIABjayhXL1SoUjhuD2KXeuNTLgAuAC4AARNNAGkAYwByAG8AcwBvAGYAdAAACUUAZABnAGUAABdBAHAAcABsAGkAYwBhAHQAaQBvAG4AABVtAHMAZQBkAGcAZQAuAGUAeABlAAB9UwBPAEYAVABXAEEAUgBFAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAQwB1AHIAcgBlAG4AdABWAGUAcgBzAGkAbwBuAFwAQQBwAHAAIABQAGEAdABoAHMAXABtAHMAZQBkAGcAZQAuAGUAeABlAAAHRwBFAFQAACNaAFMAWgBaAC0ATABhAHUAbgBjAGgAZQByAC8AMgAuADIAAQV4ADIAAHloAHQAdABwAHMAOgAvAC8AeABpAGEAbwB4AGkAdQBiAHUAegBoAGkAZABhAG8ALgBnAGkAdABoAHUAYgAuAGkAbwAvAHoAaABvAG4AZwBzAGgAZQBuAHoAaABpAHoAaABhAG4ALgBnAGkAdABoAHUAYgAuAGkAbwAAgJdoAHQAdABwAHMAOgAvAC8AYwBkAG4ALgBqAHMAZABlAGwAaQB2AHIALgBuAGUAdAAvAGcAaAAvAHgAaQBhAG8AeABpAHUAYgB1AHoAaABpAGQAYQBvAC8AegBoAG8AbgBnAHMAaABlAG4AegBoAGkAegBoAGEAbgAuAGcAaQB0AGgAdQBiAC4AaQBvAEAAbQBhAGkAbgAAE2cAYQBtAGUALgBoAHQAbQBsAAAjZwBhAG0AZQBfAHYAZQByAHMAaQBvAG4ALgBqAHMAbwBuAAAXWgBTAFoAWgBfAEwAZQBnAGkAbwBuAAAXdgBlAHIAcwBpAG8AbgAuAHQAeAB0AAAAANOfXm1l93RHvpfTh1s2LxMACLd6XFYZNOCJAgYOFsh+XnlLThhiGv+bUeJWIAAvVKhSaFYKMgAuADIALgAwAAUAAQgdDgMAAAEDAAACCAAAFRIJAg4OBQACCA4OBAABCA4JAAEBFRIJAg4OAwAADgYAAh0FDggFAAEOHQUDIAABBCABAQgEAAASFQUAAQESFQQAAQEOBQACAg4OAyAADgUAAg4ODgoHBwICEiEODggCBQABESUCAwYSLQUgARItDgQgARwOBAABDhwEAAEIHAQAABI9BCAAEkEDIAAIBAABAg4FAAIOHBwGAAMODg4OCQcGDggSLQICAgMAAAgFAAEOHRwGBwMIAh0cBAABDg4EIAEBDgMgAAoIBwQSTQoCHRwIsD9ffxHVCjoFIAIBDg4EIAASWQQgABJdBCAAEmEDIAACDAcHAhJVEmEOAhJdAgcABA4ODg4ODwcJAg4dBRIhAh0OHQ4IAggHARUSCQIODgUgAQ4dBQYgAggOEWkIMb84Vq02TjUGMAEBHgAOCAoBFRIJAg4OBhUSCQIODgUgAQITAAYgARMBEwAhBwwVEgkCDg4ODh0FDhUSCQIODhIhFRIJAg4OHQ4dDggCBiABHQ4dAwUAAggICA4HCR0OHQ4ICAgICB0DAgYAAgIOEAgEBwIICAYAARKAgQ4FIAIOCAgFAAEOHQ4GAAIBDh0FBQACAQ4OFQcNDg4OHQUSIQ4dBRIhDgIdDh0OCAUAABKAiQUgABKAjQcAAwEODhIVBCABAQIGIAEBEYCVCAABEoCJEoCRBAABAQgdBxIODg4dBRIhDhIhDg4ODg4SgJESgJECHQ4dDggRBwgODg4SgJESgIkSgJECHQ4GAAEOEYCZEQcKHQ4OEi0ODh0OHQ4dDggCBgABEoCdDgYAAQERgKkEAAEBAgUgABKArQUgABKAtQcgAwEdBQgIByADCB0FCAgEIAAdBRQHCBKAoRKAsRKAtRKAuR0FCB0FAgUAABKAwQYgAR0FHQUEIAEODgYgARKAyQ4QBwgSgMEdBRKAyQUOHQUIAggBAAgAAAAAAB4BAAEAVAIWV3JhcE5vbkV4Y2VwdGlvblRocm93cwEAAACIUwAAAAAAAAAAAACeUwAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkFMAAAAAAAAAAF9Db3JFeGVNYWluAG1zY29yZWUuZGxsAAAAAAD/JQAgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACABAAAAAgAACAGAAAADgAAIAAAAAAAAAAAAAAAAAAAAEAAQAAAFAAAIAAAAAAAAAAAAAAAAAAAAEAAQAAAGgAAIAAAAAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAJAAAACgYAAAVAIAAAAAAAAAAAAA+GIAAOoBAAAAAAAAAAAAAFQCNAAAAFYAUwBfAFYARQBSAFMASQBPAE4AXwBJAE4ARgBPAAAAAAC9BO/+AAABAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAAQAAAABAAAAAAAAAAAAAAAAAAAARAAAAAEAVgBhAHIARgBpAGwAZQBJAG4AZgBvAAAAAAAkAAQAAABUAHIAYQBuAHMAbABhAHQAaQBvAG4AAAAAAAAAsAS0AQAAAQBTAHQAcgBpAG4AZwBGAGkAbABlAEkAbgBmAG8AAACQAQAAAQAwADAAMAAwADAANABiADAAAAAsAAIAAQBGAGkAbABlAEQAZQBzAGMAcgBpAHAAdABpAG8AbgAAAAAAIAAAADAACAABAEYAaQBsAGUAVgBlAHIAcwBpAG8AbgAAAAAAMAAuADAALgAwAC4AMAAAAEAAEAABAEkAbgB0AGUAcgBuAGEAbABOAGEAbQBlAAAAbABhAHUAbgBjAGgAZQByAF8AdgAyAC4AZQB4AGUAAAAoAAIAAQBMAGUAZwBhAGwAQwBvAHAAeQByAGkAZwBoAHQAAAAgAAAASAAQAAEATwByAGkAZwBpAG4AYQBsAEYAaQBsAGUAbgBhAG0AZQAAAGwAYQB1AG4AYwBoAGUAcgBfAHYAMgAuAGUAeABlAAAANAAIAAEAUAByAG8AZAB1AGMAdABWAGUAcgBzAGkAbwBuAAAAMAAuADAALgAwAC4AMAAAADgACAABAEEAcwBzAGUAbQBiAGwAeQAgAFYAZQByAHMAaQBvAG4AAAAwAC4AMAAuADAALgAwAAAAAAAAAO+7vzw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IlVURi04IiBzdGFuZGFsb25lPSJ5ZXMiPz4NCjxhc3NlbWJseSB4bWxucz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTphc20udjEiIG1hbmlmZXN0VmVyc2lvbj0iMS4wIj4NCiAgPGFzc2VtYmx5SWRlbnRpdHkgdmVyc2lvbj0iMS4wLjAuMCIgbmFtZT0iTXlBcHBsaWNhdGlvbi5hcHAiLz4NCiAgPHRydXN0SW5mbyB4bWxucz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTphc20udjIiPg0KICAgIDxzZWN1cml0eT4NCiAgICAgIDxyZXF1ZXN0ZWRQcml2aWxlZ2VzIHhtbG5zPSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOmFzbS52MyI+DQogICAgICAgIDxyZXF1ZXN0ZWRFeGVjdXRpb25MZXZlbCBsZXZlbD0iYXNJbnZva2VyIiB1aUFjY2Vzcz0iZmFsc2UiLz4NCiAgICAgIDwvcmVxdWVzdGVkUHJpdmlsZWdlcz4NCiAgICA8L3NlY3VyaXR5Pg0KICA8L3RydXN0SW5mbz4NCjwvYXNzZW1ibHk+DQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAwAAACwMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
-const GAME_EXE_NAME = '终神之战：军团启动器.exe';
-const GAME_EXE_SIZE = 15872;
+
+const GAME_EXE_NAME = '终神之战：军团电脑端.zip';
+
+const GAME_EXE_SIZE = 15548;
+
+
 
 const downloadModal  = document.getElementById('downloadModal');
+
 const downloadYes    = document.getElementById('downloadYes');
+
 const downloadNo     = document.getElementById('downloadNo');
+
 const downloadClose  = document.getElementById('downloadClose');
+
 const apkSizeEl      = document.getElementById('apkSize');
+
 const apkSizeNote    = document.getElementById('apkSizeNote');
 
+
+
 function fmtSize(bytes) {
+
   if (bytes == null) return '—';
+
   if (bytes < 1024) return bytes + ' B';
+
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+
   return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+
 }
 
+
+
 /* 内嵌客户端大小展示 */
+
 (function () {
+
   apkSizeEl.textContent = fmtSize(GAME_EXE_SIZE);
+
 })();
+
+
 
 let afterDownloadChoice = null;   // 关闭下载弹窗后要继续执行的步骤
 
+
+
 function openDownloadModal(onDone) {
+
   afterDownloadChoice = onDone;
+
   downloadModal.classList.add('open');
+
   document.body.classList.add('modal-open');
+
 }
+
+
 
 function closeDownloadModal(next) {
+
   downloadModal.classList.remove('open');
+
   document.body.classList.remove('modal-open');
+
   if (typeof next === 'function') next();
+
 }
 
+
+
 /* 触发内嵌客户端下载（Blob） */
+
 function startDownload() {
-  const bin = atob(GAME_EXE_B64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  const blob = new Blob([bytes], { type: 'application/octet-stream' });
-  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = GAME_EXE_NAME;
+  a.href = 'https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/pc_pack.zip';
+  a.download = '终神之战：军团电脑端.zip';
   a.rel = 'noopener';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
+
+
 
 downloadYes.addEventListener('click', () => {
+
   startDownload();
+
   toast('已开始下载内测版客户端');
+
   closeDownloadModal(afterDownloadChoice);
+
 });
+
+
 
 downloadNo.addEventListener('click', () => {
+
   closeDownloadModal(afterDownloadChoice);
+
 });
+
+
 
 downloadClose.addEventListener('click', () => {
+
   closeDownloadModal(afterDownloadChoice);
+
 });
+
+
 
 downloadModal.addEventListener('click', (e) => {
+
   if (e.target === downloadModal) closeDownloadModal(afterDownloadChoice);
+
 });
+
+
 
 document.addEventListener('keydown', (e) => {
+
   if (e.key === 'Escape' && downloadModal.classList.contains('open')) {
+
     closeDownloadModal(afterDownloadChoice);
+
   }
+
 });
+
+
 
 /* ============== 启动器下载弹窗（融合独立启动器页） ============== */
-const GAME_EXE_SHA = '7d7ee051d58c778cfe86699bbcc424d6fbe5cb52309cef2c47ab9cd272b6e3a3';
+
+const GAME_EXE_SHA = '289355a5c889d81fbc1124d7314a9aaa4d50be6a6fc78b2bddf925a07f1b2675';
+
 const launcherModal   = document.getElementById('launcherModal');
+
 const launcherOpenBtn = document.getElementById('launcherOpenBtn');
+
 const launcherClose   = document.getElementById('launcherClose');
+
 const launcherSizeEl  = document.getElementById('launcherSize');
+
 const launcherShaEl   = document.getElementById('launcherSha');
+
 const launcherDlYes   = document.getElementById('launcherDlYes');
 
+
+
 (function () {
+
   launcherSizeEl.textContent = fmtSize(GAME_EXE_SIZE);
+
   launcherShaEl.textContent = GAME_EXE_SHA.slice(0, 16) + '…';
+
 })();
+
+
 
 function openLauncherModal() {
+
   launcherModal.classList.add('open');
+
   document.body.classList.add('modal-open');
+
 }
+
+
 
 function closeLauncherModal() {
+
   launcherModal.classList.remove('open');
+
   document.body.classList.remove('modal-open');
+
 }
 
+
+
 launcherOpenBtn.addEventListener('click', function () {
+
   var s = document.getElementById('launcher');
+
   if (s) { s.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
 });
 
+
+
 /* 融合区块：下载按钮与 meta 填充 */
+
 (function () {
+
   var sz = document.getElementById('lcSize');
+
   var sh = document.getElementById('lcSha');
+
   var btn = document.getElementById('lcDlBtn');
+
   if (sz && typeof GAME_EXE_SIZE !== 'undefined') sz.textContent = fmtSize(GAME_EXE_SIZE);
+
   if (sh) sh.textContent = GAME_EXE_SHA.slice(0, 12) + '…';
+
   if (btn) btn.addEventListener('click', function () {
+
     startDownload();
+
     toast('已开始下载启动器');
+
   });
+
 })();
+
+
 
 launcherClose.addEventListener('click', closeLauncherModal);
 
+
+
 launcherDlYes.addEventListener('click', () => {
+
   startDownload();
+
   toast('已开始下载启动器');
+
 });
+
+
 
 launcherModal.addEventListener('click', (e) => {
+
   if (e.target === launcherModal) closeLauncherModal();
+
 });
+
+
 
 document.addEventListener('keydown', (e) => {
+
   if (e.key === 'Escape' && launcherModal.classList.contains('open')) {
+
     closeLauncherModal();
+
   }
+
 });
+
+
 
 /* ============== 提交预约（健壮版：双绑定 + 防重复） ============== */
+
 let reserveProcessing = false;
 
+
+
 function doProcessReserve() {
+
   if (reserveProcessing) return;
+
   reserveProcessing = true;
 
+
+
   const btn = form.querySelector('button[type=submit]');
+
   btn.disabled = true;
+
   btn.textContent = '提交中…';
 
+
+
   setTimeout(() => {
+
     const no = String(count % 900000 + 100000).slice(0, 6);
+
     const seat = '#' + no;
+
     seatNo.textContent = seat;
 
+
+
     form.style.display = 'none';
+
     success.classList.add('show');
 
+
+
     count += 1;
+
     render();
 
+
+
     /* 预约成功后：先询问是否下载内测版，再进入内测资格抽取 */
+
     openDownloadModal(() => openLotteryModal(seat));
+
   }, 700);
+
 }
+
+
 
 function tryReserve(e) {
+
   if (e && e.preventDefault) e.preventDefault();
+
   if (reserveProcessing) return;
 
+
+
   if (!validatePhone(false)) {
+
     phone.focus();
+
     toast(phone.value.trim().length === 0
+
       ? '请输入手机号'
+
       : (phone.value.trim().length < 11 ? '手机号位数不足' : '手机号格式不正确'));
+
     return;
+
   }
 
+
+
   doProcessReserve();
+
 }
+
+
 
 // 主绑定：表单提交
+
 form.addEventListener('submit', tryReserve);
 
+
+
 // 后备绑定：按钮点击（确保任何环境下都能触发）
+
 const reserveBtn = form.querySelector('button[type=submit]');
+
 if (reserveBtn) {
+
   reserveBtn.addEventListener('click', () => {
+
     setTimeout(() => {
+
       if (!reserveProcessing) {
+
         tryReserve();
+
       }
+
     }, 0);
+
   });
+
 }
 
+
+
 /* ================= 锚点平滑滚动 ================= */
+
 document.querySelectorAll('a[href^="#"]').forEach(a => {
+
   a.addEventListener('click', (e) => {
+
     const id = a.getAttribute('href');
+
     if (id === '#') return;
+
     const target = document.querySelector(id);
+
     if (!target) return;
+
     e.preventDefault();
+
     const top = target.getBoundingClientRect().top + scrollY - 70;
+
     scrollTo({ top, behavior: 'smooth' });
+
   });
+
 });
+
 </script>
+
 </body>
+
 </html>
