@@ -1,9 +1,9 @@
 {
-  "version": "1.7.5",
+  "version": "1.7.6",
   "sha256": "4d542d60c221bcce2aa40dd7efd183f85bbe7c8da880430b2396ac60d7288530",
   "file": "game.html",
-  "launcher_version": "3.0.0",
-  "launcher_sha256": "abf12ebf25a6ec3a1609cb254a67a2774332f0bffda21c740ab1ced2377cefac",
+  "launcher_version": "3.1.0",
+  "launcher_sha256": "5f3db5421eb232038c69b4506e142cb40b11a4ab99ddaad38ad53ad67a25ccf8",
   "launcher_file": "launcher.exe",
   "apk_file": "apk/zhongshen_legion.apk",
   "apk_sha256": "a47d9dba5c9edec4ee7354d5150db2b256be0c2875e41a4fcde1b6b58545544e",
