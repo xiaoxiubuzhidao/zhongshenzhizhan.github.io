@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>终神之战：军团 - 游戏入口</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+    background:radial-gradient(ellipse at 50% 30%, #0b1026 0%, #04060f 60%, #01020a 100%);
+    color:#e8ecff; overflow:hidden;
+  }
+  .bg { position:fixed; inset:0; pointer-events:none;
+    background-image:linear-gradient(rgba(80,120,255,.05) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(80,120,255,.05) 1px,transparent 1px);
+    background-size:44px 44px; }
+  .card {
+    position:relative; z-index:1; text-align:center; max-width:640px; padding:56px 48px;
+    background:rgba(255,255,255,.03); border:1px solid rgba(120,160,255,.18); border-radius:20px;
+    box-shadow:0 0 60px rgba(70,110,255,.15); backdrop-filter:blur(12px);
+  }
+  .badge {
+    display:inline-block; font-size:12px; letter-spacing:3px; color:#9db4ff;
+    border:1px solid rgba(140,170,255,.35); border-radius:999px; padding:6px 16px; margin-bottom:22px;
+  }
+  h1 { font-size:34px; font-weight:800; letter-spacing:2px; margin-bottom:10px;
+    background:linear-gradient(120deg,#fff 20%,#9db4ff 80%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .sub { font-size:14px; color:#8a97c8; margin-bottom:34px; line-height:1.8; }
+  .btn {
+    display:inline-block; cursor:pointer; font-size:18px; font-weight:700; letter-spacing:6px; color:#fff;
+    padding:16px 64px; border-radius:999px; border:none; outline:none; position:relative;
+    background:linear-gradient(135deg,#3d6bff 0%,#7a4dff 100%);
+    box-shadow:0 0 30px rgba(80,110,255,.5), inset 0 1px 0 rgba(255,255,255,.25);
+    transition:transform .15s, box-shadow .3s;
+  }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 0 45px rgba(80,110,255,.75); }
+  .btn:active { transform:translateY(0); }
+  .tip { margin-top:26px; font-size:12px; color:#5b6796; }
+  .status { margin-top:18px; font-size:14px; color:#9db4ff; min-height:22px; }
+  .ok { color:#6dffb2; }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="card">
+  <div class="badge">TSR 安全系统 · 环境检测已通过</div>
+  <h1>终神之战：军团</h1>
+  <div class="sub">玩家设备校验完成，点击下方按钮进入战场</div>
+  <button class="btn" id="go">开始游戏</button>
+  <div class="status" id="status"></div>
+  <div class="tip">如长时间无响应，请关闭本窗口后重新打开启动器</div>
+</div>
+<script>
+  (function(){
+    var port = new URLSearchParams(location.search).get('port') || '23666';
+    var st = document.getElementById('status');
+    var btn = document.getElementById('go');
+    btn.addEventListener('click', function(){
+      st.textContent = '正在进入游戏…';
+      st.className = 'status';
+      var done = false;
+      try {
+        var x = new XMLHttpRequest();
+        x.open('GET', 'http://127.0.0.1:' + port + '/launch', true);
+        x.timeout = 8000;
+        x.onload = function(){ if(!done){ done=true; st.textContent='指令已发送，游戏即将打开'; st.className='status ok'; } };
+        x.onerror = function(){ if(!done){ done=true; st.textContent='连接启动器失败，请重试或重启启动器'; st.className='status'; } };
+        x.ontimeout = function(){ if(!done){ done=true; st.textContent='连接超时，请重试或重启启动器'; st.className='status'; } };
+        x.send();
+      } catch(e) {
+        st.textContent = '无法发送指令：' + e.message;
+      }
+    });
+  })();
+</script>
+</body>
+</html>
