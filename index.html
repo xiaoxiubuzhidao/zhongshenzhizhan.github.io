@@ -1997,6 +1997,7 @@ body.modal-open{overflow:hidden}
         </div>
 
         <button type="button" class="lc-dl-btn" id="lcDlBtn"><span>立即下载启动器</span></button>
+        <button type="button" class="lc-dl-btn lc-dl-btn-apk" id="lcDlApk"><span>下载安卓版 APK</span></button>
 
 
         <p class="lc-dl-note">下载后请通过启动器内的下载流程获取游戏本体。更新游戏无需重新下载启动器，启动器会自动拉取最新游戏文件。安卓版打开后同样自动检测并更新游戏。</p>
@@ -3919,6 +3920,15 @@ function closeDownloadModal(next) {
 
 /* 触发内嵌客户端下载（Blob） */
 
+function startDownloadApk() {
+  const a = document.createElement('a');
+  a.href = 'https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/apk/zhongshen_legion.apk';
+  a.download = '终神之战：军团.apk';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 function startDownload() {
   const a = document.createElement('a');
   a.href = 'https://xiaoxiubuzhidao.github.io/zhongshenzhizhan.github.io/setup.exe';
@@ -4074,6 +4084,12 @@ launcherDlYes.addEventListener('click', () => {
   toast('已开始下载启动器');
 
 });
+const lcDlApk = document.getElementById('lcDlApk');
+if (lcDlApk) lcDlApk.addEventListener('click', function () {
+  startDownloadApk();
+  toast('已开始下载安卓版');
+});
+
 
 
 
