@@ -336,6 +336,7 @@
 
   <div class="start-wrap" id="startWrap">
     <button class="btn-start" id="btnStart">开始游戏</button>
+    <button class="btn-news" id="btnNews">公告</button>
   </div>
 
   <div class="footnote" id="footnote">敬 请 期 待</div>
@@ -354,6 +355,140 @@
     </div>
     <div class="m-btns">
       <button class="btn primary" id="btnConfirmDevice">确认接入</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- 公告弹窗 -->
+<div class="modal-mask" id="newsModal">
+  <div class="modal news-modal">
+    <div class="m-icon normal" style="border-color: rgba(232,196,122,0.85); color:#ffd98a;">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </div>
+    <h2 class="m-title">游戏公告</h2>
+    <div class="m-divider"></div>
+    <div class="news-date">发布于 2026-10-02</div>
+    <div class="news-content">
+      <h3>IMPORTANT UPDATE</h3>
+      <p class="news-line"><b>本次测试已结束</b></p>
+      <h4>优化</h4>
+      <p class="news-line">藤青晚安 · 秋风纷落 皮肤细节优化<br>修复跳跃情况下人物表情问题</p>
+      <h4>服务器与静态资源</h4>
+      <ul>
+        <li>检查皮肤资源接口响应时间，确认 TTFB 是否正常。</li>
+        <li>查看服务器 CPU、内存、磁盘 IO 是否在高负载下触发卡顿。</li>
+        <li>检查带宽是否被皮肤包下载打满。</li>
+        <li>开启 Nginx/Apache 静态资源缓存。</li>
+        <li>对皮肤图片、JSON、配置开启 Gzip/Brotli 压缩。</li>
+        <li>启用 HTTP/2，减少并发请求排队。</li>
+        <li>将皮肤资源接入 CDN，降低源站压力。</li>
+        <li>配置 CDN 缓存策略，避免每次回源。</li>
+        <li>开启 Range 回源，优化大皮肤包下载。</li>
+        <li>检查 CDN 缓存命中率，排除频繁刷新缓存。</li>
+        <li>将皮肤资源域名与业务接口域名分离，做动静分离。</li>
+        <li>检查 DNS 解析耗时，必要时更换 DNS。</li>
+        <li>检查服务器连接数是否接近上限。</li>
+        <li>开启 tcp_tw_reuse，减少 TIME_WAIT 堆积。</li>
+        <li>调整文件描述符限制，避免高并发下请求失败。</li>
+        <li>检查 Nginx worker 数是否与 CPU 核数匹配。</li>
+        <li>限制单 IP 下载频率，防止异常爬虫拖垮带宽。</li>
+        <li>为皮肤资源设置合理的 Cache-Control。</li>
+        <li>为皮肤资源设置 ETag/Last-Modified，支持协商缓存。</li>
+        <li>检查 HTTPS 会话复用，减少重复握手。</li>
+        <li>检查源站与 CDN 之间回源延迟。</li>
+        <li>对跨运营商访问启用多线/CDN 就近接入。</li>
+        <li>检查服务器磁盘是否接近满盘。</li>
+        <li>将高频读取的皮肤资源放到 SSD。</li>
+        <li>使用 iostat 排查磁盘 IO 瓶颈。</li>
+        <li>将临时解压目录挂载到 tmpfs。</li>
+        <li>合并小尺寸皮肤贴图，减少请求数量。</li>
+        <li>拆分超大皮肤包，避免单次下载阻塞。</li>
+        <li>为皮肤资源建立版本化路径，方便缓存更新。</li>
+        <li>检查资源 URL 是否带随机参数导致缓存失效。</li>
+      </ul>
+      <h4>皮肤资源与客户端加载</h4>
+      <ul>
+        <li>检查皮肤贴图是否过大，优先使用合适分辨率。</li>
+        <li>使用 WebP/ASTC/ETC2 等更优格式。</li>
+        <li>为皮肤图集做纹理压缩，降低显存占用。</li>
+        <li>避免一次性加载全部皮肤，改为按需加载。</li>
+        <li>在商城、背包、预览页提前预加载常用皮肤。</li>
+        <li>使用 Addressables/AssetBundle 做资源分片。</li>
+        <li>避免主线程同步加载皮肤资源。</li>
+        <li>为皮肤加载增加进度条或占位图。</li>
+        <li>首屏不强制加载非必需皮肤资源。</li>
+        <li>检查皮肤资源是否存在重复贴图。</li>
+        <li>合并同角色皮肤到独立图集，减少内存浪费。</li>
+        <li>为未使用皮肤设置延迟卸载。</li>
+        <li>切换皮肤时复用已有材质，避免频繁重建。</li>
+        <li>检查 Shader 变体是否过多导致编译卡顿。</li>
+        <li>降低动态皮肤动画帧率，减少性能消耗。</li>
+        <li>对低配设备使用简化版皮肤。</li>
+        <li>检查皮肤资源是否触发频繁 GC。</li>
+        <li>为皮肤资源建立本地缓存，避免重复下载。</li>
+        <li>断网或弱网时优先展示已缓存皮肤。</li>
+        <li>下载失败时提供重试和降级方案。</li>
+        <li>检查资源包签名与完整性，避免加载异常。</li>
+        <li>避免在战斗/高负载场景触发大规模资源加载。</li>
+        <li>皮肤预览页使用低分辨率占位图。</li>
+        <li>检查 UI 皮肤是否造成过多 Overdraw。</li>
+        <li>为换装界面增加对象池，减少频繁创建销毁。</li>
+        <li>检查皮肤切换是否阻塞渲染线程。</li>
+        <li>避免在 Update 中频繁请求皮肤数据。</li>
+        <li>检查皮肤资源是否存在循环依赖。</li>
+        <li>为不同机型设置皮肤加载上限。</li>
+        <li>记录皮肤加载耗时，用于线上监控。</li>
+      </ul>
+      <h4>后端接口与缓存</h4>
+      <ul>
+        <li>检查皮肤列表接口是否存在慢查询。</li>
+        <li>为皮肤表增加索引，避免全表扫描。</li>
+        <li>使用 Redis 缓存热门皮肤信息。</li>
+        <li>避免每次打开商城都查数据库。</li>
+        <li>检查皮肤配置接口是否返回过多无用字段。</li>
+        <li>对皮肤数据做分页加载。</li>
+        <li>检查接口是否频繁重试导致压力放大。</li>
+        <li>为皮肤下载链接设置短期签名，避免泄露。</li>
+        <li>检查皮肤资源 URL 是否集中命中同一节点。</li>
+        <li>对高并发皮肤查询做限流。</li>
+        <li>对非核心皮肤逻辑异步化处理。</li>
+        <li>检查线程池是否被打满。</li>
+        <li>排查接口是否存在 N+1 查询。</li>
+        <li>检查皮肤权限校验是否过于昂贵。</li>
+        <li>对已拥有皮肤做本地/服务端缓存。</li>
+        <li>避免在热点接口中做复杂计算。</li>
+        <li>检查日志级别，关闭不必要的 DEBUG 日志。</li>
+        <li>对皮肤下载日志做异步写入。</li>
+        <li>检查是否有定时任务与皮肤加载高峰冲突。</li>
+        <li>对皮肤资源元数据做本地缓存。</li>
+      </ul>
+      <h4>网络、同步与安全</h4>
+      <ul>
+        <li>检查皮肤资源服务器延迟与丢包。</li>
+        <li>对弱网用户降低皮肤包并发下载数。</li>
+        <li>检查是否因跨域导致资源加载失败。</li>
+        <li>检查 CORS 配置是否正确。</li>
+        <li>检查 CDN 节点是否覆盖主要用户区域。</li>
+        <li>对动态皮肤请求使用独立域名。</li>
+        <li>检查 HTTPS 证书是否导致握手异常。</li>
+        <li>检查防火墙是否拦截皮肤资源请求。</li>
+        <li>检查安全软件是否误判资源下载。</li>
+        <li>排查恶意爬虫大量拉取皮肤资源。</li>
+        <li>对异常下载行为做频率限制。</li>
+        <li>检查服务器是否被挖矿/病毒占用资源。</li>
+        <li>检查端口和权限是否最小化。</li>
+        <li>检查日志中是否有异常 IP 访问。</li>
+        <li>对皮肤资源访问做基础鉴权。</li>
+        <li>检查资源链接是否被外部盗链。</li>
+        <li>为盗链请求返回 403 或跳转。</li>
+        <li>监控皮肤接口错误率。</li>
+        <li>建立皮肤加载卡顿告警。</li>
+        <li>用压测复现高并发皮肤加载场景，验证优化效果。</li>
+      </ul>
+    </div>
+    <div class="m-btns">
+      <button class="btn primary" id="newsClose">知道了</button>
     </div>
   </div>
 </div>
@@ -779,7 +914,38 @@ const DeviceSystem = (function() {
       }, 1000);
     }, 2500);
   }
+
+  // ===== 公告系统 =====
+  const newsModal = document.getElementById('newsModal');
+  const btnNews = document.getElementById('btnNews');
+  const newsClose = document.getElementById('newsClose');
+  function openNews(){ if(newsModal) newsModal.classList.add('show'); }
+  function closeNews(){ if(newsModal) newsModal.classList.remove('show'); }
+  if(btnNews) btnNews.addEventListener('click', openNews);
+  if(newsClose) newsClose.addEventListener('click', closeNews);
+  // 每次进入自动弹出公告
+  setTimeout(function(){ openNews(); }, 900);
 })();
 </script>
+
+<style>
+.btn-news{
+  margin-top:14px;display:inline-block;cursor:pointer;font-size:14px;font-weight:600;letter-spacing:4px;
+  color:#e8c47a;padding:11px 34px;border-radius:999px;border:1px solid rgba(232,196,122,.45);
+  background:rgba(232,196,122,.08);transition:all .25s;
+}
+.btn-news:hover{background:rgba(232,196,122,.2);box-shadow:0 0 18px rgba(232,196,122,.35);}
+.news-modal{width:min(560px,92vw);max-height:86vh;display:flex;flex-direction:column;}
+.news-date{font-size:12px;color:#a08f6b;letter-spacing:.12em;margin:6px 0 10px;text-align:center;}
+.news-content{flex:1;overflow-y:auto;padding:4px 18px 8px;text-align:left;font-size:13px;line-height:1.75;color:#e6dcc3;}
+.news-content::-webkit-scrollbar{width:5px;}
+.news-content::-webkit-scrollbar-thumb{background:rgba(232,196,122,.4);border-radius:3px;}
+.news-content h3{color:#ffd98a;letter-spacing:.18em;font-size:15px;margin:6px 0 4px;text-align:center;}
+.news-content h4{color:#e8c47a;letter-spacing:.1em;margin:14px 0 6px;font-size:13.5px;}
+.news-content ul{padding-left:18px;margin:0;}
+.news-content li{margin:3px 0;color:#cfc3a4;}
+.news-line{color:#e6dcc3;margin:2px 0;}
+</style>
+
 </body>
 </html>
