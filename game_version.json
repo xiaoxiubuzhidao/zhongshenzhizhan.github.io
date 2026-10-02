@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "sha256": "e47fd0d2f49b0eef931945517c8d54e708fd6e274197b955c2812c39772694a8",
   "file": "game.html",
-  "launcher_version": "4.0.0",
-  "launcher_sha256": "4b88c5d532e623777afa9528c97a5bd54b437e4d621c39827c19a0999cb74c02",
+  "launcher_version": "4.0.1",
+  "launcher_sha256": "6009b44482ce97afbcc77c4bdd16670b903a86dfc57f37b9ebd8a7febece98b2",
   "launcher_file": "launcher.bin"
 }
